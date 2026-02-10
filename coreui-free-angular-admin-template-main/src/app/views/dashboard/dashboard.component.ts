@@ -1,187 +1,256 @@
-import { Component, DestroyRef, DOCUMENT, effect, inject, OnInit, Renderer2, signal, WritableSignal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ChartOptions } from 'chart.js';
-import {
-  AvatarComponent,
-  ButtonDirective,
-  ButtonGroupComponent,
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { 
+  CardComponent, 
+  CardHeaderComponent, 
   CardBodyComponent,
-  CardComponent,
-  CardFooterComponent,
-  CardHeaderComponent,
   ColComponent,
-  FormCheckLabelDirective,
-  GutterDirective,
-  ProgressComponent,
   RowComponent,
-  TableDirective
+  TableDirective,
+  BadgeComponent,
+  ButtonDirective
 } from '@coreui/angular';
-import { ChartjsComponent } from '@coreui/angular-chartjs';
-import { IconDirective } from '@coreui/icons-angular';
+import { Chart, registerables } from 'chart.js';
 
-import { WidgetsBrandComponent } from '../widgets/widgets-brand/widgets-brand.component';
-import { WidgetsDropdownComponent } from '../widgets/widgets-dropdown/widgets-dropdown.component';
-import { DashboardChartsData, IChartProps } from './dashboard-charts-data';
+Chart.register(...registerables);
 
-interface IUser {
+interface OJTData {
   name: string;
-  state: string;
-  registered: string;
-  country: string;
-  usage: number;
-  period: string;
-  payment: string;
-  activity: string;
-  avatar: string;
-  status: string;
+  hours: number;
   color: string;
+  status: string;
 }
 
 @Component({
-  templateUrl: 'dashboard.component.html',
-  styleUrls: ['dashboard.component.scss'],
-  imports: [WidgetsDropdownComponent, CardComponent, CardBodyComponent, RowComponent, ColComponent, ButtonDirective, IconDirective, ReactiveFormsModule, ButtonGroupComponent, FormCheckLabelDirective, ChartjsComponent, CardFooterComponent, GutterDirective, ProgressComponent, WidgetsBrandComponent, CardHeaderComponent, TableDirective, AvatarComponent]
+  selector: 'app-dashboard',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterLink,
+    CardComponent,
+    CardHeaderComponent,
+    CardBodyComponent,
+    ColComponent,
+    RowComponent,
+    TableDirective,
+    BadgeComponent,
+    ButtonDirective
+  ],
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
+  @ViewChild('verticalBarCanvas') verticalBarCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('pieChartCanvas') pieChartCanvas!: ElementRef<HTMLCanvasElement>;
 
-  readonly #destroyRef: DestroyRef = inject(DestroyRef);
-  readonly #document: Document = inject(DOCUMENT);
-  readonly #renderer: Renderer2 = inject(Renderer2);
-  readonly #chartsData: DashboardChartsData = inject(DashboardChartsData);
-
-  public users: IUser[] = [
-    {
-      name: 'Yiorgos Avraamu',
-      state: 'New',
-      registered: 'Jan 1, 2021',
-      country: 'Us',
-      usage: 50,
-      period: 'Jun 11, 2021 - Jul 10, 2021',
-      payment: 'Mastercard',
-      activity: '10 sec ago',
-      avatar: './assets/images/avatars/1.jpg',
-      status: 'success',
-      color: 'success'
-    },
-    {
-      name: 'Avram Tarasios',
-      state: 'Recurring ',
-      registered: 'Jan 1, 2021',
-      country: 'Br',
-      usage: 10,
-      period: 'Jun 11, 2021 - Jul 10, 2021',
-      payment: 'Visa',
-      activity: '5 minutes ago',
-      avatar: './assets/images/avatars/2.jpg',
-      status: 'danger',
-      color: 'info'
-    },
-    {
-      name: 'Quintin Ed',
-      state: 'New',
-      registered: 'Jan 1, 2021',
-      country: 'In',
-      usage: 74,
-      period: 'Jun 11, 2021 - Jul 10, 2021',
-      payment: 'Stripe',
-      activity: '1 hour ago',
-      avatar: './assets/images/avatars/3.jpg',
-      status: 'warning',
-      color: 'warning'
-    },
-    {
-      name: 'Enéas Kwadwo',
-      state: 'Sleep',
-      registered: 'Jan 1, 2021',
-      country: 'Fr',
-      usage: 98,
-      period: 'Jun 11, 2021 - Jul 10, 2021',
-      payment: 'Paypal',
-      activity: 'Last month',
-      avatar: './assets/images/avatars/4.jpg',
-      status: 'secondary',
-      color: 'danger'
-    },
-    {
-      name: 'Agapetus Tadeáš',
-      state: 'New',
-      registered: 'Jan 1, 2021',
-      country: 'Es',
-      usage: 22,
-      period: 'Jun 11, 2021 - Jul 10, 2021',
-      payment: 'ApplePay',
-      activity: 'Last week',
-      avatar: './assets/images/avatars/5.jpg',
-      status: 'success',
-      color: 'primary'
-    },
-    {
-      name: 'Friderik Dávid',
-      state: 'New',
-      registered: 'Jan 1, 2021',
-      country: 'Pl',
-      usage: 43,
-      period: 'Jun 11, 2021 - Jul 10, 2021',
-      payment: 'Amex',
-      activity: 'Yesterday',
-      avatar: './assets/images/avatars/6.jpg',
-      status: 'info',
-      color: 'dark'
-    }
+  // OJT Data from Google Sheets
+  ojtData: OJTData[] = [
+    { name: 'Karl', hours: 76, color: '#5856d6', status: 'Excellent' },
+    { name: 'Kenji', hours: 62, color: '#9333ea', status: 'Good' },
+    { name: 'Lester', hours: 54, color: '#39f', status: 'Good' },
+    { name: 'Emmelie', hours: 42, color: '#f9b115', status: 'Fair' },
+    { name: 'Christian', hours: 42, color: '#e55353', status: 'Fair' },
+    { name: 'Kent', hours: 36, color: '#2eb85c', status: 'Fair' }
   ];
 
-  public mainChart: IChartProps = { type: 'line' };
-  public mainChartRef: WritableSignal<any> = signal(undefined);
-  #mainChartRefEffect = effect(() => {
-    if (this.mainChartRef()) {
-      this.setChartStyles();
-    }
-  });
-  public chart: Array<IChartProps> = [];
-  public trafficRadioGroup = new FormGroup({
-    trafficRadio: new FormControl('Month')
-  });
+  totalHours: number = 0;
+  averageHours: number = 0;
+
+  private verticalChart?: Chart;
+  private pieChart?: Chart;
 
   ngOnInit(): void {
-    this.initCharts();
-    this.updateChartOnColorModeChange();
+    this.totalHours = this.ojtData.reduce((sum, item) => sum + item.hours, 0);
+    this.averageHours = Math.round(this.totalHours / this.ojtData.length);
   }
 
-  initCharts(): void {
-    this.mainChartRef()?.stop();
-    this.mainChart = this.#chartsData.mainChart;
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.createVerticalBarChart();
+      this.createPieChart();
+    }, 100);
   }
 
-  setTrafficPeriod(value: string): void {
-    this.trafficRadioGroup.setValue({ trafficRadio: value });
-    this.#chartsData.initMainChart(value);
-    this.initCharts();
-  }
+  private createVerticalBarChart(): void {
+    const ctx = this.verticalBarCanvas.nativeElement.getContext('2d');
+    if (!ctx) return;
 
-  handleChartRef($chartRef: any) {
-    if ($chartRef) {
-      this.mainChartRef.set($chartRef);
-    }
-  }
+    const names = this.ojtData.map(item => item.name);
+    const hours = this.ojtData.map(item => item.hours);
+    const colors = this.ojtData.map(item => item.color);
 
-  updateChartOnColorModeChange() {
-    const unListen = this.#renderer.listen(this.#document.documentElement, 'ColorSchemeChange', () => {
-      this.setChartStyles();
+    this.verticalChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: names,
+        datasets: [{
+          label: 'Hours Completed',
+          data: hours,
+          backgroundColor: colors,
+          borderColor: colors,
+          borderWidth: 0,
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          },
+          title: {
+            display: true,
+            text: 'Task #4: Vertical Bar Chart',
+            font: {
+              size: 16,
+              weight: 'bold'
+            },
+            padding: {
+              bottom: 20
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            padding: 12,
+            callbacks: {
+              label: (context) => {
+                const value = context.parsed.y;
+                if (value === null || value === undefined) return '';
+                const percentage = ((value / this.totalHours) * 100).toFixed(1);
+                return `${value} hours (${percentage}%)`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 80,
+            ticks: {
+              stepSize: 10,
+              font: {
+                size: 11
+              }
+            },
+            title: {
+              display: true,
+              text: 'Total Hours',
+              font: {
+                size: 12,
+                weight: 'bold'
+              }
+            },
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)'
+            }
+          },
+          x: {
+            ticks: {
+              font: {
+                size: 12,
+                weight: 600
+              }
+            },
+            grid: {
+              display: false
+            }
+          }
+        },
+        animation: {
+          duration: 1500,
+          easing: 'easeOutQuart'
+        }
+      }
     });
+  }
 
-    this.#destroyRef.onDestroy(() => {
-      unListen();
+  private createPieChart(): void {
+    const ctx = this.pieChartCanvas.nativeElement.getContext('2d');
+    if (!ctx) return;
+
+    const names = this.ojtData.map(item => item.name);
+    const hours = this.ojtData.map(item => item.hours);
+    const colors = this.ojtData.map(item => item.color);
+
+    this.pieChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: names,
+        datasets: [{
+          data: hours,
+          backgroundColor: colors,
+          borderColor: '#fff',
+          borderWidth: 3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              padding: 15,
+              font: {
+                size: 11
+              },
+              generateLabels: (chart) => {
+                const data = chart.data;
+                if (data.labels && data.datasets.length) {
+                  return data.labels.map((label, i) => {
+                    const value = data.datasets[0].data[i] as number;
+                    const percentage = ((value / this.totalHours) * 100).toFixed(1);
+                    return {
+                      text: `${label}: ${value}h (${percentage}%)`,
+                      fillStyle: colors[i],
+                      hidden: false,
+                      index: i
+                    };
+                  });
+                }
+                return [];
+              }
+            }
+          },
+          title: {
+            display: true,
+            text: 'Task #5: Hours Distribution - Pie Chart',
+            font: {
+              size: 16,
+              weight: 'bold'
+            },
+            padding: {
+              bottom: 15
+            }
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            padding: 12,
+            callbacks: {
+              label: (context) => {
+                const value = context.parsed as number;
+                const percentage = ((value / this.totalHours) * 100).toFixed(1);
+                return `${context.label}: ${value} hours (${percentage}%)`;
+              }
+            }
+          }
+        },
+        animation: {
+          duration: 1500,
+          easing: 'easeOutQuart'
+        }
+      }
     });
   }
 
-  setChartStyles() {
-    if (this.mainChartRef()) {
-      setTimeout(() => {
-        const options: ChartOptions = { ...this.mainChart.options };
-        const scales = this.#chartsData.getScales();
-        this.mainChartRef().options.scales = { ...options.scales, ...scales };
-        this.mainChartRef().update();
-      });
-    }
+  getPercentage(hours: number): string {
+    return ((hours / this.totalHours) * 100).toFixed(1) + '%';
+  }
+
+  ngOnDestroy(): void {
+    if (this.verticalChart) this.verticalChart.destroy();
+    if (this.pieChart) this.pieChart.destroy();
   }
 }

@@ -1,0 +1,57 @@
+<div class="animated fadeIn">
+  <!-- Page Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="mb-1">Task #3: Horizontal Bar Chart</h2>
+      <p class="text-medium-emphasis mb-0">Full page visualization - Daily Tasks Accomplishment Indicator</p>
+    </div>
+    <div>
+      <a routerLink="/dashboard" cButton color="primary" variant="outline">
+        Other Charts →
+      </a>
+    </div>
+  </div>
+
+  <!-- Horizontal Bar Chart (Full Page) -->
+  <c-row>
+    <c-col xs="12">
+      <c-card>
+        <c-card-header class="d-flex justify-content-between align-items-center">
+          <strong>Horizontal Bar Chart</strong>
+          <c-badge color="primary">Full Page</c-badge>
+        </c-card-header>
+        <c-card-body>
+          <p class="text-medium-emphasis mb-3">
+            Full page visualization of OJT hours completed
+          </p>
+          <div class="chart-wrapper" style="height: 500px; position: relative;">
+            <canvas #horizontalBarCanvas></canvas>
+          </div>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+
+  <!-- Navigation Card -->
+  <c-row class="mt-4">
+    <c-col xs="12">
+      <c-card class="text-white" style="background: linear-gradient(135deg, #5856d6 0%, #4745b3 100%);">
+        <c-card-body class="py-4">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h5 class="mb-2">✅ Horizontal Bar Chart Complete</h5>
+              <p class="mb-0 small" style="opacity: 0.9;">
+                Horizontal bar chart showing all 6 OJT members with full page width
+              </p>
+            </div>
+            <div>
+              <a routerLink="/dashboard" cButton color="light" size="lg">
+                View Other Charts →
+              </a>
+            </div>
+          </div>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+</div>

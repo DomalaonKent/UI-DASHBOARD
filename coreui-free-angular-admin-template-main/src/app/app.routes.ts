@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { DashboardHorizontalComponent } from './views/dashboard-horizontal/dashboard-horizontal.component';
-import { DashboardAnalyticsComponent } from './views/dashboard-analytics/dashboard-analytics.component';
 
 export const routes: Routes = [
   {
@@ -14,11 +12,30 @@ export const routes: Routes = [
     data: {
       title: 'Home'
     },
+    
     children: [
       {
         path: 'dashboard',
         loadChildren: () => import('./views/dashboard/routes').then((m) => m.routes)
       },
+      {
+      path: 'task3',
+      loadComponent: () => import('./views/task3/task3.component').then(m => m.Task3Component),
+      data: { title: 'Task #3' }
+      },
+      {
+      path: 'dashboard',
+      loadComponent: () => import('./views/dashboard/dashboard.component').then(m => m.DashboardComponent),
+      data: { title: 'Dashboard' }
+      },
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./views/dashboard/dashboard.component').then(m => m.DashboardComponent),
+        data: 
+  {
+        title: 'OJT Dashboard'
+      }
+    },
       {
         path: 'theme',
         loadChildren: () => import('./views/theme/routes').then((m) => m.routes)
