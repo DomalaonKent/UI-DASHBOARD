@@ -1,0 +1,38 @@
+<div class="animated fadeIn">
+  <!-- Header -->
+  <c-row class="mb-4">
+    <c-col xs="12">
+      <c-card class="border-top-3 border-top-info">
+        <c-card-body class="text-center py-4">
+          <h2 class="mb-2">OJT Analytics Dashboard</h2>
+          <p class="text-medium-emphasis mb-0">Vertical Bar Chart & Pie Chart Analysis</p>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+
+  <!-- Quick Stats -->
+  <c-row class="mb-4">
+    <c-col xs="6" sm="3">
+      <c-card class="text-center border-0 bg-primary-gradient">
+        <c-card-body class="py-3">
+          <div class="text-white">
+            <div class="h3 mb-0">{{ totalHours }}</div>
+            <div class="text-uppercase small fw-semibold opacity-75">Total Hours</div>
+          </div>
+        </c-card-body>
+      </c-card>
+    </c-col>
+    
+    <c-col xs="6" sm="3">
+      <c-card class="text-center border-0 bg-info-gradient">
+        <c-card-body class="py-3">
+          <div class="text-white">
+            <div class="h3 mb-0">{{ averageHours }}</div>
+            <div class="text-uppercase small fw-semibold opacity-75">Average</div>
+          </div>
+        </c-card-body>
+      </c-card>
+    </c-col>
+    
+  
