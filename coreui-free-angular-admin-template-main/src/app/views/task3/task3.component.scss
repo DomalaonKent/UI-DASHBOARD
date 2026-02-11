@@ -1,5 +1,89 @@
-// Task 3 Component Styles
+// Simple Layout
+.page-container {
+  display: flex;
+  gap: 0;
+}
 
+// Left Navigation Panel (Simple)
+.simple-nav-panel {
+  width: 250px;
+  background: white;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+}
+
+.back-btn {
+  width: 100%;
+  padding: 10px;
+  background: white;
+  color: #5856d6;
+  border: 2px solid #5856d6;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.back-btn:hover {
+  background: #f0f0ff;
+}
+
+.nav-title {
+  background: #5856d6;
+  color: white;
+  padding: 15px;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nav-link {
+  padding: 12px 15px;
+  color: #5856d6;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.nav-link:hover {
+  background: #f0f0ff;
+}
+
+// Main Content Area
+.main-area {
+  flex: 1;
+  padding: 20px;
+  background: #f8f9fa;
+}
+
+// Welcome Banner
+.welcome-banner {
+  background: linear-gradient(135deg, #5856d6 0%, #6f6dd6 100%);
+  color: white;
+  padding: 30px 40px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-banner h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+}
+
+.welcome-banner p {
+  font-size: 16px;
+  margin: 0;
+  opacity: 0.95;
+}
+
+// Existing styles
 .animated.fadeIn {
   animation: fadeIn 0.5s ease-in;
 }

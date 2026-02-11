@@ -1,8 +1,8 @@
 <div class="animated fadeIn">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-      <h2 class="mb-1">Vertical Bar and Pie Chart</h2>
-      <p class="text-medium-emphasis mb-0">Daily Tasks Accomplishment</p>
+      <h2 class="mb-1"> OJT Accomplishment Overview </h2>
+      <p class="text-medium-emphasis mb-0"> Reviewing trainee milestones and historical task completion data. </p>
     </div>
     <div>
       <a routerLink="/task3" cButton color="primary" variant="outline">
@@ -74,11 +74,11 @@
       <c-card class="h-100">
         <c-card-header class="d-flex justify-content-between align-items-center">
           <strong>Vertical Bar Chart</strong>
-          <c-badge color="success">Half Page</c-badge>
+          <c-badge color="success"> Individual View </c-badge>
         </c-card-header>
         <c-card-body>
           <p class="text-medium-emphasis mb-3">
-            Half page view with vertical orientation
+            Total Hours per Trainee
           </p>
           <div class="chart-wrapper" style="height: 450px; position: relative;">
             <canvas #verticalBarCanvas></canvas>
@@ -91,11 +91,11 @@
       <c-card class="h-100">
         <c-card-header class="d-flex justify-content-between align-items-center">
           <strong>Pie Chart</strong>
-          <c-badge color="warning">Half Page</c-badge>
+          <c-badge color="warning"> Collective View </c-badge>
         </c-card-header>
         <c-card-body>
           <p class="text-medium-emphasis mb-3">
-            Distribution percentage of hours
+            Team Hours Distribution
           </p>
           <div class="chart-wrapper" style="height: 450px; position: relative;">
             <canvas #pieChartCanvas></canvas>
@@ -105,69 +105,4 @@
     </c-col>
   </c-row>
 
-  <c-row>
-    <c-col xs="12">
-      <c-card>
-        <c-card-header>
-          <strong>OJT Performance Summary</strong>
-        </c-card-header>
-        <c-card-body>
-          <p class="text-medium-emphasis mb-3">
-            Complete data from Google Sheets - Daily Tasks Accomplishment Indicator
-          </p>
-          <div class="table-responsive">
-            <table cTable [hover]="true" [striped]="true" class="mb-0">
-              <thead>
-                <tr>
-                  <th scope="col">Rank</th>
-                  <th scope="col">OJT Name</th>
-                  <th scope="col">Total Hours</th>
-                  <th scope="col">Percentage</th>
-                  <th scope="col">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let item of ojtData; let i = index">
-                  <td>
-                    <c-badge 
-                      [color]="i === 0 ? 'warning' : i === 1 ? 'secondary' : i === 2 ? 'info' : 'light'"
-                      class="px-2 py-1 fw-bold">
-                      {{ i + 1 }}
-                    </c-badge>
-                  </td>
-                  <td>
-                    <div class="d-flex align-items-center">
-                      <span 
-                        class="badge rounded-circle me-2" 
-                        [style.background-color]="item.color"
-                        style="width: 12px; height: 12px;">
-                      </span>
-                      <strong>{{ item.name }}</strong>
-                    </div>
-                  </td>
-                  <td><strong>{{ item.hours }} hours</strong></td>
-                  <td>{{ getPercentage(item.hours) }}</td>
-                  <td>
-                    <c-badge 
-                      [color]="item.status === 'Excellent' ? 'success' : item.status === 'Good' ? 'info' : 'warning'">
-                      {{ item.status }}
-                    </c-badge>
-                  </td>
-                </tr>
-              </tbody>
-              <tfoot class="table-light">
-                <tr>
-                  <td colspan="2"><strong>Total</strong></td>
-                  <td><strong>{{ totalHours }} hours</strong></td>
-                  <td><strong>100%</strong></td>
-                  <td></td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-        </c-card-body>
-      </c-card>
-    </c-col>
-  </c-row>
-
- 
+  
