@@ -8,7 +8,8 @@ import {
   ColComponent,
   RowComponent,
   ButtonDirective,
-  BadgeComponent
+  BadgeComponent,
+  TableDirective
 } from '@coreui/angular';
 import { Chart, registerables } from 'chart.js';
 
@@ -32,7 +33,8 @@ interface OJTData {
     ColComponent,
     RowComponent,
     ButtonDirective,
-    BadgeComponent
+    BadgeComponent,
+    TableDirective
   ],
   templateUrl: './task3.component.html',
   styleUrls: ['./task3.component.scss']
@@ -62,6 +64,10 @@ export class Task3Component implements OnInit {
     setTimeout(() => {
       this.createHorizontalBarChart();
     }, 100);
+  }
+
+  getPercentage(hours: number): string {
+    return ((hours / this.totalHours) * 100).toFixed(1) + '%';
   }
 
   private createHorizontalBarChart(): void {
