@@ -43,6 +43,7 @@ interface OJTData {
 export class DashboardComponent implements OnInit {
   @ViewChild('verticalBarCanvas') verticalBarCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('pieChartCanvas') pieChartCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('quadrantCanvas') quadrantCanvas!: ElementRef<HTMLCanvasElement>;
 
   // OJT Data from Google Sheets
   ojtData: OJTData[] = [
@@ -59,6 +60,7 @@ export class DashboardComponent implements OnInit {
 
   private verticalChart?: Chart;
   private pieChart?: Chart;
+  private quadrantChart?: Chart;
 
   ngOnInit(): void {
     this.totalHours = this.ojtData.reduce((sum, item) => sum + item.hours, 0);
@@ -69,6 +71,7 @@ export class DashboardComponent implements OnInit {
     setTimeout(() => {
       this.createVerticalBarChart();
       this.createPieChart();
+      this.createQuadrantChart();
     }, 100);
   }
 
@@ -245,6 +248,108 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  private createQuadrantChart(): void {
+    const ctx = this.quadrantCanvas.nativeElement.getContext('2d');
+    if (!ctx) return;
+
+    this.quadrantChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['', '', '', '', '', '', '', '', ''],
+        datasets: [
+          {
+            label: 'Q1 - Dashed',
+            data: [],
+            borderColor: '#e55353',
+            backgroundColor: 'transparent',
+            borderDash: [10, 5],
+            borderWidth: 3,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            tension: 0.3
+          },
+          {
+            label: 'Q2 - Dotted',
+            data: [],
+            borderColor: '#2eb85c',
+            backgroundColor: 'transparent',
+            borderDash: [2, 4],
+            borderWidth: 3,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            tension: 0.3
+          },
+          {
+            label: 'Q3 - Solid',
+            data: [],
+            borderColor: '#5856d6',
+            backgroundColor: 'transparent',
+            borderWidth: 3,
+            pointStyle: 'triangle',
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            tension: 0.2
+          },
+          {
+            label: 'Q4 - Rounded',
+            data: [],
+            borderColor: '#f9b115',
+            backgroundColor: 'rgba(249, 177, 21, 0.1)',
+            borderWidth: 3,
+            borderCapStyle: 'round',
+            borderJoinStyle: 'round',
+            pointStyle: 'rectRounded',
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            tension: 0.4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              padding: 15,
+              font: { size: 12 }
+            }
+          },
+          title: {
+            display: true,
+            text: 'Task #6: Four Quadrants - Different Line Styles',
+            font: { size: 16, weight: 'bold' },
+            padding: { bottom: 20 }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            grid: {
+              color: (context) => {
+                if (context.tick.value === 50) return 'rgba(0,0,0,0.3)';
+                return 'rgba(0,0,0,0.05)';
+              },
+              lineWidth: (context) => context.tick.value === 50 ? 2 : 1
+            }
+          },
+          x: {
+            grid: {
+              color: (context) => {
+                const index = context.index;
+                if (index === 4) return 'rgba(0,0,0,0.3)';
+                return 'rgba(0,0,0,0.05)';
+              },
+              lineWidth: (context) => context.index === 4 ? 2 : 1
+            }
+          }
+        }
+      }
+    });
+  }
+
   getPercentage(hours: number): string {
     return ((hours / this.totalHours) * 100).toFixed(1) + '%';
   }
@@ -252,5 +357,6 @@ export class DashboardComponent implements OnInit {
   ngOnDestroy(): void {
     if (this.verticalChart) this.verticalChart.destroy();
     if (this.pieChart) this.pieChart.destroy();
+    if (this.quadrantChart) this.quadrantChart.destroy();
   }
 }
