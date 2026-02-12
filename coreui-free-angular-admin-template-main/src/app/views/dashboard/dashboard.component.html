@@ -91,7 +91,7 @@
       <c-card class="h-100">
         <c-card-header class="d-flex justify-content-between align-items-center">
           <strong>Pie Chart</strong>
-          <c-badge color="warning"> Collective View </c-badge>
+          <c-badge color="warning"> Collective View</c-badge>
         </c-card-header>
         <c-card-body>
           <p class="text-medium-emphasis mb-3">
@@ -105,4 +105,61 @@
     </c-col>
   </c-row>
 
-  
+  <c-row class="mb-4">
+    <c-col xs="12">
+      <c-card>
+        <c-card-header>
+          <strong>OJT Performance Analysis</strong>
+        </c-card-header>
+        <c-card-body>
+          <div class="chart-wrapper" style="height: 500px; position: relative;">
+            <canvas #lineChartCanvas></canvas>
+          </div>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+
+  <c-row>
+    <c-col xs="12" md="6" class="mb-4">
+      <c-card class="quadrant-1">
+        <c-card-body class="text-center p-4">
+          <h4>High Hours - High Performance</h4>
+          <div class="display-4 my-3">{{ quadrant1Count }}</div>
+          <p>Top performers with excellent hours</p>
+        </c-card-body>
+      </c-card>
+    </c-col>
+
+    <c-col xs="12" md="6" class="mb-4">
+      <c-card class="quadrant-2">
+        <c-card-body class="text-center p-4">
+          <h4>Low Hours - High Performance</h4>
+          <div class="display-4 my-3">{{ quadrant2Count }}</div>
+          <p>Efficient performers</p>
+        </c-card-body>
+      </c-card>
+    </c-col>
+
+    <c-col xs="12" md="6" class="mb-4 mb-md-0">
+      <c-card class="quadrant-3">
+        <c-card-body class="text-center p-4">
+          <h4>High Hours - Low Performance</h4>
+          <div class="display-4 my-3">{{ quadrant3Count }}</div>
+          <p>Need optimization</p>
+        </c-card-body>
+      </c-card>
+    </c-col>
+
+    <c-col xs="12" md="6">
+      <c-card class="quadrant-4">
+        <c-card-body class="text-center p-4">
+          <h4>Low Hours - Low Performance</h4>
+          <div class="display-4 my-3">{{ quadrant4Count }}</div>
+          <p>Need support</p>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+
+</div>
