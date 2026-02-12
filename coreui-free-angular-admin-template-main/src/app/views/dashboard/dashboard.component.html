@@ -1,8 +1,8 @@
 <div class="animated fadeIn">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-      <h2 class="mb-1"> OJT Accomplishment Overview </h2>
-      <p class="text-medium-emphasis mb-0"> Reviewing trainee milestones and historical task completion data. </p>
+      <h2 class="mb-1">OJT Accomplishment Overview</h2>
+      <p class="text-medium-emphasis mb-0">Reviewing trainee milestones and historical task completion data.</p>
     </div>
     <div>
       <a routerLink="/task3" cButton color="primary" variant="outline">
@@ -70,33 +70,29 @@
   </c-row>
 
   <c-row class="mb-4">
-    <c-col xs="12" lg="6" class="mb-4 mb-lg-0">
+    <c-col xs="12" lg="6" class="mb-4">
       <c-card class="h-100">
         <c-card-header class="d-flex justify-content-between align-items-center">
-          <strong>Vertical Bar Chart</strong>
-          <c-badge color="success"> Individual View </c-badge>
+          <strong>Horizontal Bar Chart</strong>
+          <c-badge color="success">Quadrant 1</c-badge>
         </c-card-header>
         <c-card-body>
-          <p class="text-medium-emphasis mb-3">
-            Total Hours per Trainee
-          </p>
+          <p class="text-medium-emphasis mb-3">Total Hours per Trainee</p>
           <div class="chart-wrapper" style="height: 450px; position: relative;">
-            <canvas #verticalBarCanvas></canvas>
+            <canvas #horizontalBarCanvas></canvas>
           </div>
         </c-card-body>
       </c-card>
     </c-col>
 
-    <c-col xs="12" lg="6">
+    <c-col xs="12" lg="6" class="mb-4">
       <c-card class="h-100">
         <c-card-header class="d-flex justify-content-between align-items-center">
           <strong>Pie Chart</strong>
-          <c-badge color="warning"> Collective View</c-badge>
+          <c-badge color="warning">Quadrant 2</c-badge>
         </c-card-header>
         <c-card-body>
-          <p class="text-medium-emphasis mb-3">
-            Team Hours Distribution
-          </p>
+          <p class="text-medium-emphasis mb-3">Team Hours Distribution</p>
           <div class="chart-wrapper" style="height: 450px; position: relative;">
             <canvas #pieChartCanvas></canvas>
           </div>
@@ -105,20 +101,32 @@
     </c-col>
   </c-row>
 
-
- <c-row class="mb-4">
-    <c-col xs="12" lg="12" class="mt-4">
-      <c-card>
+  <c-row class="mb-4">
+    <c-col xs="12" lg="6" class="mb-4">
+      <c-card class="h-100">
         <c-card-header class="d-flex justify-content-between align-items-center">
-          <strong>Four Quadrant Line Chart</strong>
-          <c-badge color="info"> Quadrant Style </c-badge>
+          <strong>Line Chart</strong>
+          <c-badge color="info">Quadrant 3</c-badge>
         </c-card-header>
         <c-card-body>
-          <p class="text-medium-emphasis mb-3">
-            Quadrant Visualization with Different Styles
-          </p>
-          <div class="chart-wrapper" style="height: 500px; position: relative;">
-            <canvas #quadrantCanvas></canvas>
+          <p class="text-medium-emphasis mb-3">Hours Progress Trend</p>
+          <div class="chart-wrapper" style="height: 450px; position: relative;">
+            <canvas #lineChartCanvas></canvas>
+          </div>
+        </c-card-body>
+      </c-card>
+    </c-col>
+
+    <c-col xs="12" lg="6" class="mb-4">
+      <c-card class="h-100">
+        <c-card-header class="d-flex justify-content-between align-items-center">
+          <strong>Gauge Chart</strong>
+          <c-badge color="danger">Quadrant 4</c-badge>
+        </c-card-header>
+        <c-card-body>
+          <p class="text-medium-emphasis mb-3">Overall Progress</p>
+          <div class="chart-wrapper" style="height: 450px; position: relative;">
+            <canvas #gaugeCanvas></canvas>
           </div>
         </c-card-body>
       </c-card>
