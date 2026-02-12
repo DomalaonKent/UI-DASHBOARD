@@ -1,5 +1,5 @@
 <div class="animated fadeIn">
-  <div class="d-flex justify-content-between align-items-center mb-4">
+  <div class="d-flex justify-content-between align-items-center mb-2">
     <div>
       <h2 class="mb-1">OJT Accomplishment Overview</h2>
       <p class="text-medium-emphasis mb-0">Reviewing trainee milestones and historical task completion data.</p>
@@ -11,9 +11,9 @@
     </div>
   </div>
 
-  <c-row class="mb-4">
+  <c-row class="mb-3">
     <c-col xs="12" sm="6" lg="3">
-      <c-card class="mb-4">
+      <c-card class="mb-3" style="min-height: 100px;">
         <c-card-body class="pb-3 d-flex justify-content-between align-items-start">
           <div>
             <div class="fs-4 fw-semibold">{{ totalHours }}</div>
@@ -27,7 +27,7 @@
     </c-col>
 
     <c-col xs="12" sm="6" lg="3">
-      <c-card class="mb-4">
+      <c-card class="mb-3" style="min-height: 100px;">
         <c-card-body class="pb-3 d-flex justify-content-between align-items-start">
           <div>
             <div class="fs-4 fw-semibold">{{ averageHours }}</div>
@@ -41,7 +41,7 @@
     </c-col>
 
     <c-col xs="12" sm="6" lg="3">
-      <c-card class="mb-4">
+      <c-card class="mb-3" style="min-height: 100px;">
         <c-card-body class="pb-3 d-flex justify-content-between align-items-start">
           <div>
             <div class="fs-4 fw-semibold">{{ ojtData.length }}</div>
@@ -55,7 +55,7 @@
     </c-col>
 
     <c-col xs="12" sm="6" lg="3">
-      <c-card class="mb-4">
+      <c-card class="mb-3" style="min-height: 100px;">
         <c-card-body class="pb-3 d-flex justify-content-between align-items-start">
           <div>
             <div class="fs-4 fw-semibold">{{ ojtData[0].name }}</div>
@@ -69,31 +69,31 @@
     </c-col>
   </c-row>
 
-  <c-row class="mb-4">
-    <c-col xs="12" lg="6" class="mb-4">
-      <c-card class="h-100">
-        <c-card-header class="d-flex justify-content-between align-items-center">
+  <c-row class="mb-1" style="margin-left: -8px; margin-right: -8px;">
+    <c-col xs="8" lg="6" class="mb-2" style="padding-left: 8px; padding-right: 8px;">
+      <c-card class="h-55">
+        <c-card-header class="d-flex justify-content-between align-items-center py-2">
           <strong>Horizontal Bar Chart</strong>
           <c-badge color="success">Quadrant 1</c-badge>
         </c-card-header>
-        <c-card-body>
-          <p class="text-medium-emphasis mb-3">Total Hours per Trainee</p>
-          <div class="chart-wrapper" style="height: 450px; position: relative;">
+        <c-card-body class="py-1 px-2">
+          <p class="text-medium-emphasis mb-2 small">Total Hours per Trainee</p>
+          <div class="chart-wrapper" style="height: 220px; position: relative;">
             <canvas #horizontalBarCanvas></canvas>
           </div>
         </c-card-body>
       </c-card>
     </c-col>
 
-    <c-col xs="12" lg="6" class="mb-4">
-      <c-card class="h-100">
-        <c-card-header class="d-flex justify-content-between align-items-center">
+    <c-col xs="8" lg="6" class="mb-1" style="padding-left: 8px; padding-right: 8px;">
+      <c-card class="h-55">
+        <c-card-header class="d-flex justify-content-between align-items-center py-2">
           <strong>Pie Chart</strong>
           <c-badge color="warning">Quadrant 2</c-badge>
         </c-card-header>
-        <c-card-body>
-          <p class="text-medium-emphasis mb-3">Team Hours Distribution</p>
-          <div class="chart-wrapper" style="height: 450px; position: relative;">
+        <c-card-body class="py-1 px-2">
+          <p class="text-medium-emphasis mb-2 small">Team Hours Distribution</p>
+          <div class="chart-wrapper" style="height: 220px; position: relative;">
             <canvas #pieChartCanvas></canvas>
           </div>
         </c-card-body>
@@ -101,31 +101,31 @@
     </c-col>
   </c-row>
 
-  <c-row class="mb-4">
-    <c-col xs="12" lg="6" class="mb-4">
-      <c-card class="h-100">
-        <c-card-header class="d-flex justify-content-between align-items-center">
+  <c-row class="mb-1" style="margin-left: -8px; margin-right: -8px;">
+    <c-col xs="8" lg="6" class="mb-1" style="padding-left: 8px; padding-right: 8px;">
+      <c-card class="h-55">
+        <c-card-header class="d-flex justify-content-between align-items-center py-2">
           <strong>Line Chart</strong>
           <c-badge color="info">Quadrant 3</c-badge>
         </c-card-header>
-        <c-card-body>
-          <p class="text-medium-emphasis mb-3">Hours Progress Trend</p>
-          <div class="chart-wrapper" style="height: 450px; position: relative;">
+        <c-card-body class="py-2 px-3">
+          <p class="text-medium-emphasis mb-2 small">Hours Progress Trend</p>
+          <div class="chart-wrapper" style="height: 260px; position: relative;">
             <canvas #lineChartCanvas></canvas>
           </div>
         </c-card-body>
       </c-card>
     </c-col>
 
-    <c-col xs="12" lg="6" class="mb-4">
-      <c-card class="h-100">
-        <c-card-header class="d-flex justify-content-between align-items-center">
+    <c-col xs="8" lg="6" class="mb-1" style="padding-left: 8px; padding-right: 8px;">
+      <c-card class="h-55">
+        <c-card-header class="d-flex justify-content-between align-items-center py-2">
           <strong>Gauge Chart</strong>
           <c-badge color="danger">Quadrant 4</c-badge>
         </c-card-header>
-        <c-card-body>
-          <p class="text-medium-emphasis mb-3">Overall Progress</p>
-          <div class="chart-wrapper" style="height: 450px; position: relative;">
+        <c-card-body class="py-2 px-3">
+          <p class="text-medium-emphasis mb-2 small">Overall Progress</p>
+          <div class="chart-wrapper" style="height: 260px; position: relative;">
             <canvas #gaugeCanvas></canvas>
           </div>
         </c-card-body>
