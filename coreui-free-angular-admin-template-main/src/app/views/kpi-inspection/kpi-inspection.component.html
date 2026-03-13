@@ -1,0 +1,180 @@
+<div class="kpi-page-wrapper">
+<div class="animated fadeIn">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="page-title">KPI Inspection</h2>
+      <p class="page-subtitle">Key Performance Indicators — Inspection Activities</p>
+    </div>
+    <a routerLink="/dashboard" class="btn-go-dashboard">
+      ← KPI Inspection Summary
+    </a>
+  </div>
+
+  <c-row class="mb-4">
+    <c-col xs="12" sm="6" lg="3">
+      <div class="stat-card stat-purple mb-3">
+        <div class="stat-head">
+          Inspectors
+        </div>
+        <div class="stat-body">
+          <div class="stat-value">{{ kpiData.length }}</div>
+        </div>
+      </div>
+    </c-col>
+    <c-col xs="12" sm="6" lg="3">
+      <div class="stat-card stat-blue mb-3">
+        <div class="stat-head">
+          Avg Commitment
+        </div>
+        <div class="stat-body">
+          <div class="stat-value">{{ avgCommitment }}</div>
+        </div>
+      </div>
+    </c-col>
+    <c-col xs="12" sm="6" lg="3">
+      <div class="stat-card stat-green mb-3">
+        <div class="stat-head">
+          Avg Accomplishment
+        </div>
+        <div class="stat-body">
+          <div class="stat-value">{{ avgAccomplishment }}</div>
+        </div>
+      </div>
+    </c-col>
+    <c-col xs="12" sm="6" lg="3">
+      <div class="stat-card stat-yellow mb-3">
+        <div class="stat-head">
+          Avg Final Rating
+        </div>
+        <div class="stat-body">
+          <div class="stat-value">{{ avgFinalRating }}</div>
+        </div>
+      </div>
+    </c-col>
+  </c-row>
+
+  <c-row>
+
+    <c-col xs="12" lg="4" class="mb-4">
+      <div class="kpi-panel">
+        <div class="kpi-panel-header commitment">
+          <div class="panel-title-row">
+            <span class="panel-accent-dot" style="background:#818cf8;"></span>
+            <span class="panel-title">Performance Commitment</span>
+          </div>
+          <span class="panel-badge badge-blue">Q · E · T</span>
+        </div>
+        <div class="col-header-row">
+          <div class="col-inspector">Inspector</div>
+          <div class="col-q">Quality</div>
+          <div class="col-e">Efficiency</div>
+          <div class="col-t">Timeliness</div>
+        </div>
+        <div class="rows-scroll">
+          <div class="inspector-row" *ngFor="let k of kpiData; let i = index">
+            <div class="col-inspector">
+              <div class="row-avatar" [style.background]="k.photo ? 'transparent' : getAvatarColor(i)">
+                <img *ngIf="k.photo" [src]="k.photo" [alt]="k.inspector"
+                     class="avatar-img"
+                     (error)="k.photo = undefined" />
+                <span *ngIf="!k.photo">{{ k.inspector.charAt(0) }}</span>
+              </div>
+              <div class="row-name-block">
+                <span class="row-name">{{ k.inspector }}</span>
+                <span class="row-period">{{ k.period }}</span>
+              </div>
+            </div>
+            <div class="col-q"><span class="qet-pill qet-blue">{{ k.commitment.quality }}</span></div>
+            <div class="col-e"><span class="qet-pill qet-blue">{{ k.commitment.efficiency }}</span></div>
+            <div class="col-t"><span class="qet-pill qet-blue">{{ k.commitment.timeliness }}</span></div>
+          </div>
+        </div>
+      </div>
+    </c-col>
+
+    <c-col xs="12" lg="4" class="mb-4">
+      <div class="kpi-panel">
+        <div class="kpi-panel-header accomplishment">
+          <div class="panel-title-row">
+            <span class="panel-accent-dot" style="background:#34d399;"></span>
+            <span class="panel-title">Actual Accomplishment</span>
+          </div>
+          <span class="panel-badge badge-green">Q · E · T</span>
+        </div>
+        <div class="col-header-row">
+          <div class="col-inspector">Inspector</div>
+          <div class="col-q">Quality</div>
+          <div class="col-e">Efficiency</div>
+          <div class="col-t">Timeliness</div>
+        </div>
+        <div class="rows-scroll">
+          <div class="inspector-row" *ngFor="let k of kpiData; let i = index">
+            <div class="col-inspector">
+              <div class="row-avatar" [style.background]="k.photo ? 'transparent' : getAvatarColor(i)">
+                <img *ngIf="k.photo" [src]="k.photo" [alt]="k.inspector"
+                     class="avatar-img"
+                     (error)="k.photo = undefined" />
+                <span *ngIf="!k.photo">{{ k.inspector.charAt(0) }}</span>
+              </div>
+              <div class="row-name-block">
+                <span class="row-name">{{ k.inspector }}</span>
+                <span class="row-period">{{ k.period }}</span>
+              </div>
+            </div>
+            <div class="col-q"><span class="qet-pill qet-green">{{ k.actual.quality }}</span></div>
+            <div class="col-e"><span class="qet-pill qet-green">{{ k.actual.efficiency }}</span></div>
+            <div class="col-t"><span class="qet-pill qet-green">{{ k.actual.timeliness }}</span></div>
+          </div>
+        </div>
+      </div>
+    </c-col>
+
+    <c-col xs="12" lg="4" class="mb-4">
+      <div class="kpi-panel">
+        <div class="kpi-panel-header rating">
+          <div class="panel-title-row">
+            <span class="panel-accent-dot" style="background:#fbbf24;"></span>
+            <span class="panel-title">Rating</span>
+          </div>
+          <span class="panel-badge badge-yellow">Q · E · T</span>
+        </div>
+        <div class="col-header-row">
+          <div class="col-inspector">Inspector</div>
+          <div class="col-q">Q</div>
+          <div class="col-e">E</div>
+          <div class="col-t">T</div>
+        </div>
+        <div class="rows-scroll">
+          <div class="inspector-row" *ngFor="let k of kpiData; let i = index">
+            <div class="col-inspector">
+              <div class="row-avatar" [style.background]="k.photo ? 'transparent' : getAvatarColor(i)">
+                <img *ngIf="k.photo" [src]="k.photo" [alt]="k.inspector"
+                     class="avatar-img"
+                     (error)="k.photo = undefined" />
+                <span *ngIf="!k.photo">{{ k.inspector.charAt(0) }}</span>
+              </div>
+              <div class="row-name-block">
+                <span class="row-name">{{ k.inspector }}</span>
+                <span class="rating-status-badge"
+                  [ngClass]="getRatingBadgeClass(k.rating.quality, k.rating.efficiency, k.rating.timeliness)">
+                  {{ getRatingLabel(k.rating.quality, k.rating.efficiency, k.rating.timeliness) }}
+                </span>
+              </div>
+            </div>
+            <div class="col-q"><span class="qet-pill qet-yellow">{{ k.rating.quality }}</span></div>
+            <div class="col-e"><span class="qet-pill qet-yellow">{{ k.rating.efficiency }}</span></div>
+            <div class="col-t"><span class="qet-pill qet-yellow">{{ k.rating.timeliness }}</span></div>
+          </div>
+        </div>
+        <div class="avg-footer-row">
+          <div class="col-inspector">Group Average</div>
+          <div class="col-q">{{ avgQ }}</div>
+          <div class="col-e">{{ avgE }}</div>
+          <div class="col-t">{{ avgT }}</div>
+        </div>
+      </div>
+    </c-col>
+
+  </c-row>
+</div>
+</div>

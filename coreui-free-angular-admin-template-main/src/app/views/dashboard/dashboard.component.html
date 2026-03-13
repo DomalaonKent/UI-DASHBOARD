@@ -69,6 +69,122 @@
     </c-col>
   </c-row>
 
+  <c-row class="mb-1">
+    <c-col xs="12">
+      <c-card class="mb-2">
+        <c-card-header class="d-flex justify-content-between align-items-center py-2">
+          <strong>KPI Inspection Summary</strong>
+          <a routerLink="/kpi-inspection" cButton color="primary" size="sm" variant="outline">
+            View Full Details →
+          </a>
+        </c-card-header>
+        <c-card-body class="py-2">
+          <c-row>
+            <c-col xs="12" md="4" class="mb-2 mb-md-0">
+              <div class="summary-group" style="border-left:4px solid #5856d6;">
+                <div class="summary-group-title">
+                  <svg cIcon name="cilTask" size="sm" class="me-1"></svg>
+                  Performance Commitment
+                </div>
+                <c-row class="g-2 mt-1">
+                  <c-col xs="4" class="text-center">
+                    <div class="summary-number" style="color:#5856d6;">{{ kpiSummary.commitment.quality }}</div>
+                    <div class="summary-label">Quality</div>
+                  </c-col>
+                  <c-col xs="4" class="text-center">
+                    <div class="summary-number" style="color:#5856d6;">{{ kpiSummary.commitment.efficiency }}</div>
+                    <div class="summary-label">Efficiency</div>
+                  </c-col>
+                  <c-col xs="4" class="text-center">
+                    <div class="summary-number" style="color:#5856d6;">{{ kpiSummary.commitment.timeliness }}</div>
+                    <div class="summary-label">Timeliness</div>
+                  </c-col>
+                </c-row>
+                <div class="mt-2">
+                  <div class="progress" style="height:5px;">
+                    <div class="progress-bar" style="background:#5856d6;"
+                      [style.width.%]="(kpiSummary.commitment.overall / 5) * 100"></div>
+                  </div>
+                  <div class="d-flex justify-content-between mt-1">
+                    <span class="x-small text-medium-emphasis">Group Avg (Q·E·T)</span>
+                    <span class="x-small fw-semibold" style="color:#5856d6;">{{ kpiSummary.commitment.overall }} / 5</span>
+                  </div>
+                </div>
+              </div>
+            </c-col>
+
+            <c-col xs="12" md="4" class="mb-2 mb-md-0">
+              <div class="summary-group" style="border-left:4px solid #2eb85c;">
+                <div class="summary-group-title">
+                  <svg cIcon name="cilCheckCircle" size="sm" class="me-1"></svg>
+                  Actual Accomplishment
+                </div>
+                <c-row class="g-2 mt-1">
+                  <c-col xs="4" class="text-center">
+                    <div class="summary-number text-success">{{ kpiSummary.actual.quality }}</div>
+                    <div class="summary-label">Quality</div>
+                  </c-col>
+                  <c-col xs="4" class="text-center">
+                    <div class="summary-number text-success">{{ kpiSummary.actual.efficiency }}</div>
+                    <div class="summary-label">Efficiency</div>
+                  </c-col>
+                  <c-col xs="4" class="text-center">
+                    <div class="summary-number text-success">{{ kpiSummary.actual.timeliness }}</div>
+                    <div class="summary-label">Timeliness</div>
+                  </c-col>
+                </c-row>
+                <div class="mt-2">
+                  <div class="progress" style="height:5px;">
+                    <div class="progress-bar bg-success"
+                      [style.width.%]="(kpiSummary.actual.overall / 5) * 100"></div>
+                  </div>
+                  <div class="d-flex justify-content-between mt-1">
+                    <span class="x-small text-medium-emphasis">Group Avg (Q·E·T)</span>
+                    <span class="x-small fw-semibold text-success">{{ kpiSummary.actual.overall }} / 5</span>
+                  </div>
+                </div>
+              </div>
+            </c-col>
+
+            <c-col xs="12" md="4">
+              <div class="summary-group" style="border-left:4px solid #f9b115;">
+                <div class="summary-group-title">
+                  <svg cIcon name="cilStar" size="sm" class="me-1"></svg>
+                  Rating
+                </div>
+                <c-row class="g-2 mt-1">
+                  <c-col xs="4" class="text-center">
+                    <div class="summary-number" style="color:#c87f0a;">{{ kpiSummary.rating.quality }}</div>
+                    <div class="summary-label">Q</div>
+                  </c-col>
+                  <c-col xs="4" class="text-center">
+                    <div class="summary-number" style="color:#c87f0a;">{{ kpiSummary.rating.efficiency }}</div>
+                    <div class="summary-label">E</div>
+                  </c-col>
+                  <c-col xs="4" class="text-center">
+                    <div class="summary-number" style="color:#c87f0a;">{{ kpiSummary.rating.timeliness }}</div>
+                    <div class="summary-label">T</div>
+                  </c-col>
+                </c-row>
+                <div class="mt-2">
+                  <div class="progress" style="height:5px;">
+                    <div class="progress-bar bg-warning"
+                      [style.width.%]="(kpiSummary.rating.overall / 5) * 100"></div>
+                  </div>
+                  <div class="d-flex justify-content-between mt-1">
+                    <span class="x-small text-medium-emphasis">Overall Avg</span>
+                    <span class="x-small fw-semibold text-warning">{{ kpiSummary.rating.overall }} / 5</span>
+                  </div>
+                </div>
+              </div>
+            </c-col>
+
+          </c-row>
+        </c-card-body>
+      </c-card>
+    </c-col>
+  </c-row>
+
   <c-row class="mb-1" style="margin-left: -8px; margin-right: -8px;">
     <c-col xs="12" lg="6" class="mb-2" style="padding-left: 8px; padding-right: 8px;">
       <c-card class="h-55">
@@ -116,7 +232,7 @@
         </c-card-body>
       </c-card>
     </c-col>
-
+    
     <c-col xs="12" lg="6" class="mb-1" style="padding-left: 8px; padding-right: 8px;">
       <c-card class="h-55">
         <c-card-header class="d-flex justify-content-between align-items-center py-2">

@@ -86,6 +86,13 @@ export const routes: Routes = [
         data: { title: 'Daily Time Record' }
       },
       {
+        path: 'kpi-inspection',
+        loadComponent: () =>
+          import('./views/kpi-inspection/kpi-inspection.component').then(
+            m => m.KpiInspectionComponent
+          )
+      },
+      {
         path: 'theme',
         loadChildren: () => import('./views/theme/routes').then((m) => m.routes)
       },

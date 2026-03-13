@@ -92,13 +92,14 @@ export class Task3Component implements OnInit, AfterViewInit, OnDestroy {
     return ((hours / this.totalHours) * 100).toFixed(1) + '%';
   }
 
-  goToConnectivity(): void { this.router.navigate(['/connectivity-dashboard']); }
-  goToCallSign(): void { this.router.navigate(['/call-sign']); }
+  goToConnectivity(): void  { this.router.navigate(['/connectivity-dashboard']); }
+  goToCallSign(): void      { this.router.navigate(['/call-sign']); }
   goToNonGovCallSign(): void { this.router.navigate(['/non-gov-call-sign']); }
-  goToPrs(): void { this.router.navigate(['/prs']); }
-  goToVl(): void { this.router.navigate(['/visitor-logbook']); }
-  goToVl2(): void { this.router.navigate(['/visitor-logbook2']); }
-  goToDtr(): void { this.router.navigate(['/daily-time-record']); }
+  goToPrs(): void           { this.router.navigate(['/prs']); }
+  goToVl(): void            { this.router.navigate(['/visitor-logbook']); }
+  goToVl2(): void           { this.router.navigate(['/visitor-logbook2']); }
+  goToDtr(): void           { this.router.navigate(['/daily-time-record']); }
+  goToKpi(): void           { this.router.navigate(['/kpi-inspection']); }
 
   switchView(view: string): void {
     this.currentView = view;
