@@ -704,4 +704,21 @@ export class ConnectivityDashboardComponent implements OnInit {
       this.showDetailForm = false;
     }
   }
+
+deleteFromForm(): void {
+  if (!this.selectedItem) return;
+  const confirmMsg = `Are you sure you want to delete this record? You won't be able to recover this data.`;
+  
+  if (confirm(confirmMsg)) {
+    this.allData = this.allData.filter(d => d !== this.selectedItem);
+    this.buildDropdownLists();
+    this.buildDateList();
+    this.buildProviderList();
+    this.applyFilterAndSort();
+    this.showDetailForm = false;
+    this.selectedItem = null;
+
+    alert("Record deleted successfully.");
+  }
+}
 }

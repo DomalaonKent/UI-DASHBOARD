@@ -11,7 +11,7 @@
 
   <div class="carousel-wrapper">
     <button class="carousel-arrow" (click)="prevTab()" [disabled]="tabIndex === 0">&#8249;</button>
-    
+
     <div class="tab-nav">
       <button class="tab-btn" [class.active]="activeTab === 'portable'" (click)="onTabChange('portable')">Portable Government</button>
       <button class="tab-btn" [class.active]="activeTab === 'fb'" (click)="onTabChange('fb')">FB Government</button>
@@ -237,6 +237,9 @@
     </div>
     <div class="detail-form-footer">
       <button class="btn-form-cancel" (click)="cancelForm()">Cancel</button>
+      <button class="btn-form-delete" *ngIf="isEditMode" (click)="deleteFromForm()" [disabled]="isSavingForm">
+        Delete
+      </button>
       <button class="btn-form-save" (click)="saveForm()" [disabled]="isSavingForm">
         <span *ngIf="isSavingForm">Saving...</span>
         <span *ngIf="!isSavingForm">{{ isEditMode ? 'Update' : 'Save' }}</span>

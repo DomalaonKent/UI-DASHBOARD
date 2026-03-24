@@ -54,7 +54,7 @@ export class CallSignComponent implements OnInit {
   pagedData: CallSignData[] = [];
 
   searchTerm: string = '';
-  
+
   currentPage: number = 1;
   pageSize: number = 10;
   totalPages: number = 1;
@@ -331,4 +331,20 @@ export class CallSignComponent implements OnInit {
       this.showDetailForm = false;
     }, 300);
   }
+
+    deleteFromForm(): void {
+  if (!this.selectedItem) return;
+  const confirmMsg = `Are you sure you want to delete call sign "${this.selectedItem.callSign}"? You won't be able to recover this data.`;
+  
+  if (confirm(confirmMsg)) {
+    this.allData = this.allData.filter(d => d !== this.selectedItem);
+    this.allDataByTab[this.activeTab] = this.allDataByTab[this.activeTab]
+      .filter(item => item !== this.selectedItem);
+      
+    this.applyFilterAndSort();
+    this.showDetailForm = false;
+    
+    alert("Record deleted successfully."); 
+  }
+}
 }

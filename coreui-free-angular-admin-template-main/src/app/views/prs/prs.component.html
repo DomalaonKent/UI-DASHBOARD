@@ -97,6 +97,7 @@
         [(ngModel)]="searchTerm"
         (input)="onSearch()">
     </div>
+    <button class="btn-add-new" (click)="openAddForm()">+ Add New Record</button>
   </div>
 
   <div class="table-container">
@@ -178,6 +179,7 @@
               </span>
             </span>
           </th>
+          <th rowspan="2" class="col-actions-header"><span class="th-inner">Actions</span></th>
         </tr>
         <tr class="thead-row-2">
           <th (click)="sortBy('txFreq')" [class.col-active]="getColSort('txFreq')" [class.col-asc]="getColSort('txFreq') === 'asc'" [class.col-desc]="getColSort('txFreq') === 'desc'">
@@ -212,9 +214,14 @@
           <td>{{ item.serialNumber || '—' }}</td>
           <td>{{ item.source || '—' }}</td>
           <td>{{ item.issued || '—' }}</td>
+          <td class="col-actions-cell">
+            <button class="btn-edit-icon" (click)="openEditForm(item)" title="Edit record">
+              <img src="assets/images/edit.png" alt="Edit" class="edit-icon-img" />
+            </button>
+          </td>
         </tr>
         <tr *ngIf="pagedData.length === 0">
-          <td colspan="10" class="empty-cell">No records found.</td>
+          <td colspan="11" class="empty-cell">No records found.</td>
         </tr>
       </tbody>
     </table>
@@ -237,6 +244,98 @@
       </ng-container>
       <button class="page-btn" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages" title="Next">›</button>
       <button class="page-btn" (click)="goToPage(totalPages)" [disabled]="currentPage === totalPages" title="Last">»</button>
+    </div>
+  </div>
+</div>
+
+<div class="detail-form-overlay" *ngIf="showDetailForm" (click)="cancelForm()">
+  <div class="detail-form-modal" (click)="$event.stopPropagation()">
+    <div class="detail-form-header">
+      <span class="detail-form-title">
+        <span *ngIf="isEditMode" class="form-title-icon">&#9998;</span>
+        <span *ngIf="!isEditMode" class="form-title-icon">&#43;</span>
+        {{ isEditMode ? 'Edit Record #' + selectedItem?.id : 'Add New Record' }}
+      </span>
+      <button class="detail-form-close" (click)="cancelForm()">✕</button>
+    </div>
+    <div class="detail-form-body">
+      <div class="detail-form-grid">
+        <div class="detail-form-section-label section-callsign">
+          <span class="section-bar"></span>
+          <span class="section-text">Step 1 — Call Sign Info</span>
+        </div>
+        <div class="detail-form-group">
+          <label class="detail-form-label">Call Sign</label>
+          <input type="text" class="detail-form-input" [(ngModel)]="formData.callSign" placeholder="Enter call sign" />
+        </div>
+        <div class="detail-form-group">
+          <label class="detail-form-label">Licensee <span class="required-star">*</span></label>
+          <input type="text" class="detail-form-input" [(ngModel)]="formData.licensee" placeholder="Enter licensee name" />
+        </div>
+
+        <div class="detail-form-section-label section-location">
+          <span class="section-bar"></span>
+          <span class="section-text">Step 2 — Location</span>
+        </div>
+        <div class="detail-form-group detail-form-group--full">
+          <label class="detail-form-label">Location</label>
+          <input type="text" class="detail-form-input" [(ngModel)]="formData.location" placeholder="Enter location" />
+        </div>
+
+        <div class="detail-form-section-label section-frequency">
+          <span class="section-bar"></span>
+          <span class="section-text">Step 3 — Frequency</span>
+        </div>
+        <div class="detail-form-group">
+          <label class="detail-form-label">TX Frequency</label>
+          <input type="text" class="detail-form-input" [(ngModel)]="formData.txFreq" placeholder="e.g. 153.50 MHz" />
+        </div>
+        <div class="detail-form-group">
+          <label class="detail-form-label">RX Frequency</label>
+          <input type="text" class="detail-form-input" [(ngModel)]="formData.rxFreq" placeholder="e.g. 153.50 MHz" />
+        </div>
+
+        <div class="detail-form-section-label section-equipment">
+          <span class="section-bar"></span>
+          <span class="section-text">Step 4 — Equipment</span>
+        </div>
+        <div class="detail-form-group">
+          <label class="detail-form-label">Equipment</label>
+          <input type="text" class="detail-form-input" [(ngModel)]="formData.equipment" placeholder="e.g. ICOM IC-F5061" />
+        </div>
+        <div class="detail-form-group">
+          <label class="detail-form-label">Serial Number</label>
+          <input type="text" class="detail-form-input" [(ngModel)]="formData.serialNumber" placeholder="Enter serial number" />
+        </div>
+        <div class="detail-form-group">
+          <label class="detail-form-label">Source</label>
+          <input type="text" class="detail-form-input" [(ngModel)]="formData.source" placeholder="Enter source" />
+        </div>
+        <div class="detail-form-group">
+          <label class="detail-form-label">Issued Date</label>
+          <input type="date" class="detail-form-input" [(ngModel)]="formData.issued" />
+        </div>
+
+        <div class="detail-form-section-label section-collected">
+          <span class="section-bar"></span>
+          <span class="section-text">Step 5 — Collected By</span>
+        </div>
+        <div class="detail-form-group detail-form-group--full">
+          <label class="detail-form-label">Name</label>
+          <input type="text" class="detail-form-input" [(ngModel)]="formData.collectedBy" placeholder="Enter name" />
+        </div>
+      </div>
+      <div class="detail-form-error" *ngIf="formErrorMessage">{{ formErrorMessage }}</div>
+    </div>
+    <div class="detail-form-footer">
+      <button class="btn-form-cancel" (click)="cancelForm()">Cancel</button>
+      <button class="btn-form-delete" *ngIf="isEditMode" (click)="deleteFromForm()" [disabled]="isSavingForm">
+         Delete
+      </button>
+      <button class="btn-form-save" (click)="saveForm()" [disabled]="isSavingForm">
+        <span *ngIf="isSavingForm">Saving...</span>
+        <span *ngIf="!isSavingForm">{{ isEditMode ? 'Update' : 'Save' }}</span>
+      </button>
     </div>
   </div>
 </div>

@@ -67,6 +67,17 @@ export class PrsComponent implements OnInit {
   provinceStats: ProvinceStats[] = [];
   licenseeStats: LicenseeStats = { lguUnits: 0, municipalities: 0, uniqueLocations: 0 };
 
+  showDetailForm: boolean = false;
+  isEditMode: boolean = false;
+  isSavingForm: boolean = false;
+  selectedItem: any = null;
+  formErrorMessage: string = '';
+  formData: any = {
+    callSign: '', licensee: '', txFreq: '', rxFreq: '',
+    location: '', equipment: '', serialNumber: '',
+    source: '', issued: '', collectedBy: ''
+  };
+
   private readonly PROVINCES: string[] = [
     'Albay',
     'Camarines Norte',
@@ -277,4 +288,79 @@ export class PrsComponent implements OnInit {
   goBack(): void {
     this.router.navigate(['/task3']);
   }
+
+  openEditForm(item: any): void {
+    this.selectedItem = item;
+    this.isEditMode = true;
+    this.formErrorMessage = '';
+    this.formData = {
+      callSign: item.callSign ?? '',
+      licensee: item.licensee ?? '',
+      txFreq: item.txFreq ?? '',
+      rxFreq: item.rxFreq ?? '',
+      location: item.location ?? '',
+      equipment: item.equipment ?? '',
+      serialNumber: item.serialNumber ?? '',
+      source: item.source ?? '',
+      issued: item.issued ?? '',
+      collectedBy: item.collectedBy ?? ''
+    };
+    this.showDetailForm = true;
+  }
+
+  openAddForm(): void {
+    this.selectedItem = null;
+    this.isEditMode = false;
+    this.formErrorMessage = '';
+    this.formData = {
+      callSign: '', licensee: '', txFreq: '', rxFreq: '',
+      location: '', equipment: '', serialNumber: '',
+      source: '', issued: '', collectedBy: ''
+    };
+    this.showDetailForm = true;
+  }
+
+  cancelForm(): void {
+    this.showDetailForm = false;
+    this.formErrorMessage = '';
+  }
+
+  saveForm(): void {
+    if (!this.formData.licensee?.trim()) {
+      this.formErrorMessage = 'Licensee is required.';
+      return;
+    }
+    this.isSavingForm = true;
+    setTimeout(() => {
+      if (this.isEditMode && this.selectedItem) {
+        Object.assign(this.selectedItem, this.formData);
+      } else {
+        const newId = this.allData.length > 0
+          ? Math.max(...this.allData.map(d => Number(d.id) || 0)) + 1
+          : 1;
+        const newRecord: any = { id: newId, ...this.formData };
+        this.allData = [...this.allData, newRecord];
+        this.allDataByTab[this.activeTab] = this.allData;
+        this.applyFilterAndSort();
+      }
+      this.isSavingForm = false;
+      this.showDetailForm = false;
+    }, 300);
+  }
+
+  deleteFromForm(): void {
+  if (!this.selectedItem) return;
+  const confirmMsg = `Are you sure you want to delete call sign "${this.selectedItem.callSign}"? You won't be able to recover this data.`;
+  
+  if (confirm(confirmMsg)) {
+    this.allData = this.allData.filter(d => d !== this.selectedItem);
+    this.allDataByTab[this.activeTab] = this.allDataByTab[this.activeTab]
+      .filter(item => item !== this.selectedItem);
+      
+    this.applyFilterAndSort();
+    this.showDetailForm = false;
+    
+    alert("Record deleted successfully."); 
+  }
+}
 }
