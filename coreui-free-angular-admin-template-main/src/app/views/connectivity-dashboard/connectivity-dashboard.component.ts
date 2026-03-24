@@ -13,10 +13,28 @@ interface ProviderStats {
   totalUploadDataSize: number;
   totalDownloadDataSize: number;
 }
+
 interface PersonStat {
   name: string;
   uploadDataSize: number;
   downloadDataSize: number;
+}
+
+interface ConnectivityFormData {
+  location: string;
+  barangay: string;
+  cityMunicipality: string;
+  province: string;
+  validationDate: string;   
+  validationTime: string;
+  technology: string;
+  serviceProvider: string;
+  upload: number | null;
+  download: number | null;
+  signalStrength: string;
+  uploadDataSize: number | null;
+  downloadDataSize: number | null;
+  collectedBy: string;
 }
 
 @Component({
@@ -54,6 +72,7 @@ export class ConnectivityDashboardComponent implements OnInit {
   get activeDate(): string | null {
     return this.activeDateIndex >= 0 ? this.dateList[this.activeDateIndex] : null;
   }
+
   periodList: string[] = ['AM', 'PM'];
   activePeriodIndex: number = -1;
   get activePeriod(): string | null {
@@ -85,6 +104,12 @@ export class ConnectivityDashboardComponent implements OnInit {
   carouselNext(): void { if (this.carouselIndex < this.carouselMaxIndex) this.carouselIndex++; }
   goToCarousel(index: number): void { this.carouselIndex = index; }
 
+  showDetailForm: boolean = false;
+  isEditMode: boolean = false;
+  selectedItem: ConnectivityData | null = null;
+  isSavingForm: boolean = false;
+  formErrorMessage: string = '';
+  formData: ConnectivityFormData = this.emptyFormData();
 
   constructor(private router: Router, private connectivityService: ConnectivityService) {}
 
@@ -272,7 +297,7 @@ export class ConnectivityDashboardComponent implements OnInit {
 
     for (const row of this.filteredData) {
       const name = row.collectedBy || 'Unknown';
-      
+
       if (!map.has(name)) {
         map.set(name, { name, uploadDataSize: 0, downloadDataSize: 0 });
       }
@@ -324,7 +349,7 @@ export class ConnectivityDashboardComponent implements OnInit {
         String(item.upload         ?? '').toLowerCase().includes(term) ||
         String(item.download       ?? '').toLowerCase().includes(term) ||
         String(item.signalStrength ?? '').toLowerCase().includes(term) ||
-        (item.collectedBy          ?? '').toLowerCase().includes(term) 
+        (item.collectedBy          ?? '').toLowerCase().includes(term)
       );
     }
 
@@ -505,5 +530,178 @@ export class ConnectivityDashboardComponent implements OnInit {
   }
 
   goBack(): void { this.router.navigate(['/task3']); }
-  onAddNew(): void { console.log('Add New clicked'); }
+
+  onAddNew(): void { this.openAddForm(); }
+
+  private emptyFormData(): ConnectivityFormData {
+    return {
+      location: '',
+      barangay: '',
+      cityMunicipality: '',
+      province: '',
+      validationDate: '',
+      validationTime: '',
+      technology: '',
+      serviceProvider: '',
+      upload: null,
+      download: null,
+      signalStrength: '',
+      uploadDataSize: null,
+      downloadDataSize: null,
+      collectedBy: '',
+    };
+  }
+
+  private toInputDate(dateStr: string): string {
+    if (!dateStr) return '';
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+    const parts = dateStr.split('/');
+    if (parts.length === 3) {
+      const [m, d, y] = parts;
+      return `${y.padStart(4, '0')}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+    }
+    return dateStr;
+  }
+
+  private toInputTime(timeStr: string): string {
+    if (!timeStr) return '';
+    if (/^\d{2}:\d{2}$/.test(timeStr)) return timeStr;
+    const match = timeStr.trim().toLowerCase().match(/^(\d{1,2}):(\d{2})\s*(am|pm)$/);
+    if (match) {
+      let hour = parseInt(match[1], 10);
+      const min = match[2];
+      const period = match[3];
+      if (period === 'am' && hour === 12) hour = 0;
+      else if (period === 'pm' && hour !== 12) hour += 12;
+      return `${String(hour).padStart(2, '0')}:${min}`;
+    }
+    return timeStr;
+  }
+
+  private toDisplayDate(dateStr: string): string {
+    if (!dateStr) return '';
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+      const [y, m, d] = dateStr.split('-');
+      return `${parseInt(m)}/${parseInt(d)}/${y}`;
+    }
+    return dateStr;
+  }
+
+  private toDisplayTime(timeStr: string): string {
+    if (!timeStr) return '';
+    if (/^\d{2}:\d{2}$/.test(timeStr)) {
+      const [hStr, min] = timeStr.split(':');
+      let hour = parseInt(hStr, 10);
+      const period = hour >= 12 ? 'PM' : 'AM';
+      if (hour === 0) hour = 12;
+      else if (hour > 12) hour -= 12;
+      return `${hour}:${min} ${period}`;
+    }
+    return timeStr;
+  }
+
+  openAddForm(): void {
+    this.isEditMode = false;
+    this.selectedItem = null;
+    this.formData = this.emptyFormData();
+    this.formErrorMessage = '';
+    this.showDetailForm = true;
+  }
+
+  openEditForm(item: ConnectivityData): void {
+    this.isEditMode = true;
+    this.selectedItem = item;
+    this.formData = {
+      location:         item.location         ?? '',
+      barangay:         item.barangay         ?? '',
+      cityMunicipality: item.cityMunicipality ?? '',
+      province:         item.province         ?? '',
+      validationDate:   this.toInputDate(item.validationDate  ?? ''),
+      validationTime:   this.toInputTime(item.validationTime  ?? ''),
+      technology:       item.technology       ?? '',
+      serviceProvider:  item.serviceProvider  ?? '',
+      upload:           item.upload           ?? null,
+      download:         item.download         ?? null,
+      signalStrength:   item.signalStrength   ?? '',
+      uploadDataSize:   item.uploadDataSize   ?? null,
+      downloadDataSize: item.downloadDataSize ?? null,
+      collectedBy:      item.collectedBy      ?? '',
+    };
+    this.formErrorMessage = '';
+    this.showDetailForm = true;
+  }
+
+  cancelForm(): void {
+    this.showDetailForm = false;
+    this.formData = this.emptyFormData();
+    this.formErrorMessage = '';
+    this.selectedItem = null;
+  }
+
+  saveForm(): void {
+    if (!this.formData.serviceProvider) {
+      this.formErrorMessage = 'Service Provider is required.';
+      return;
+    }
+
+    this.isSavingForm = true;
+    this.formErrorMessage = '';
+
+    if (this.isEditMode && this.selectedItem) {
+      const idx = this.allData.findIndex(d => d.id === this.selectedItem!.id);
+      if (idx !== -1) {
+        this.allData[idx] = {
+          ...this.allData[idx],
+          location:         this.formData.location,
+          barangay:         this.formData.barangay,
+          cityMunicipality: this.formData.cityMunicipality,
+          province:         this.formData.province,
+          validationDate:   this.toDisplayDate(this.formData.validationDate),
+          validationTime:   this.toDisplayTime(this.formData.validationTime),
+          technology:       this.formData.technology,
+          serviceProvider:  this.formData.serviceProvider,
+          upload:           this.formData.upload   ?? 0,
+          download:         this.formData.download ?? 0,
+          signalStrength:   this.formData.signalStrength,
+          uploadDataSize:   this.formData.uploadDataSize   ?? 0,
+          downloadDataSize: this.formData.downloadDataSize ?? 0,
+          collectedBy:      this.formData.collectedBy,
+        };
+      }
+      this.buildDropdownLists();
+      this.buildDateList();
+      this.buildProviderList();
+      this.applyFilterAndSort();
+      this.isSavingForm = false;
+      this.showDetailForm = false;
+
+    } else {
+      const newRecord: ConnectivityData = {
+        id:               Date.now(),
+        region:           this.formData.province ?? '',
+        province:         this.formData.province,
+        cityMunicipality: this.formData.cityMunicipality,
+        barangay:         this.formData.barangay,
+        location:         this.formData.location,
+        validationDate:   this.toDisplayDate(this.formData.validationDate),
+        validationTime:   this.toDisplayTime(this.formData.validationTime),
+        technology:       this.formData.technology,
+        serviceProvider:  this.formData.serviceProvider,
+        upload:           this.formData.upload   ?? 0,
+        download:         this.formData.download ?? 0,
+        signalStrength:   this.formData.signalStrength,
+        uploadDataSize:   this.formData.uploadDataSize   ?? 0,
+        downloadDataSize: this.formData.downloadDataSize ?? 0,
+        collectedBy:      this.formData.collectedBy,
+      } as ConnectivityData;
+
+      this.allData = [newRecord, ...this.allData];
+      this.buildDropdownLists();
+      this.buildDateList();
+      this.buildProviderList();
+      this.applyFilterAndSort();
+      this.isSavingForm = false;
+      this.showDetailForm = false;
+    }
+  }
 }

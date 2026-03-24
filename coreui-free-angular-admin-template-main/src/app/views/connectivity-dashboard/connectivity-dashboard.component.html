@@ -6,7 +6,6 @@
     </div>
     <div class="header-buttons">
       <button class="btn-back" (click)="goBack()">← Back</button>
-      <button class="btn-add" (click)="onAddNew()">+ Add New</button>
     </div>
   </div>
 
@@ -179,7 +178,7 @@
     </div>
   </div>
 
-  <div class="toolbar">
+  <div class="filter-bar">
     <div class="search-container">
       <span class="search-icon">🔍</span>
       <input
@@ -190,35 +189,39 @@
         (input)="onSearch()">
     </div>
 
-    <div class="filter-dropdowns">
-      <div class="filter-select-wrap">
-        <select class="filter-select" [(ngModel)]="selectedProvince" (change)="onProvinceChange()">
-          <option value="">All Provinces</option>
-          <option *ngFor="let p of provinceList" [value]="p">{{ p }}</option>
-        </select>
-        <span class="select-arrow">▾</span>
-      </div>
-
-      <div class="filter-select-wrap">
-        <select class="filter-select" [(ngModel)]="selectedCity" (change)="onCityChange()">
-          <option value="">All Cities / Municipalities</option>
-          <option *ngFor="let c of filteredCityList" [value]="c">{{ c }}</option>
-        </select>
-        <span class="select-arrow">▾</span>
-      </div>
-
-      <div class="filter-select-wrap">
-        <select class="filter-select" [(ngModel)]="selectedBarangay" (change)="onBarangayChange()">
-          <option value="">All Barangays</option>
-          <option *ngFor="let b of filteredBarangayList" [value]="b">{{ b }}</option>
-        </select>
-        <span class="select-arrow">▾</span>
-      </div>
-
-      <button class="btn-clear-filters" *ngIf="hasActiveFilters()" (click)="clearFilters()">
-        ✕ Clear
-      </button>
+    <div class="filter-select-wrap">
+      <select class="filter-select" [(ngModel)]="selectedProvince" (change)="onProvinceChange()">
+        <option value="">All Provinces</option>
+        <option *ngFor="let p of provinceList" [value]="p">{{ p }}</option>
+      </select>
+      <span class="select-arrow">▾</span>
     </div>
+
+    <div class="filter-select-wrap">
+      <select class="filter-select" [(ngModel)]="selectedCity" (change)="onCityChange()">
+        <option value="">All Cities / Municipalities</option>
+        <option *ngFor="let c of filteredCityList" [value]="c">{{ c }}</option>
+      </select>
+      <span class="select-arrow">▾</span>
+    </div>
+
+    <div class="filter-select-wrap">
+      <select class="filter-select" [(ngModel)]="selectedBarangay" (change)="onBarangayChange()">
+        <option value="">All Barangays</option>
+        <option *ngFor="let b of filteredBarangayList" [value]="b">{{ b }}</option>
+      </select>
+      <span class="select-arrow">▾</span>
+    </div>
+
+    <button class="btn-clear-filters" *ngIf="hasActiveFilters()" (click)="clearFilters()">
+      ✕ Clear
+    </button>
+
+    <div class="filter-bar-spacer"></div>
+
+    <button class="btn-filter-add-new" (click)="onAddNew()">
+      + Add New Record
+    </button>
   </div>
 
   <div class="table-container">
@@ -379,6 +382,10 @@
               </span>
             </span>
           </th>
+
+          <th class="col-actions-header">
+            <span class="th-inner">Actions</span>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -399,9 +406,14 @@
           <td>{{ item.signalStrength }}</td>
           <td>{{ item.uploadDataSize ?? '—' }}</td>
           <td>{{ item.downloadDataSize ?? '—' }}</td>
+          <td class="col-actions-cell">
+            <button class="btn-edit-icon" (click)="openEditForm(item)" title="Edit record">
+              <img src="assets/images/edit.png" alt="Edit" class="edit-icon-img" />
+            </button>
+          </td>
         </tr>
         <tr *ngIf="pagedData.length === 0">
-          <td colspan="11" class="empty-cell">No records found.</td>
+          <td colspan="12" class="empty-cell">No records found.</td>
         </tr>
       </tbody>
     </table>
@@ -427,4 +439,149 @@
     </div>
   </div>
 
+</div>
+
+<div class="detail-form-overlay" *ngIf="showDetailForm" (click)="cancelForm()">
+  <div class="detail-form-modal" (click)="$event.stopPropagation()">
+
+    <div class="detail-form-header">
+      <span class="detail-form-title">
+        <span *ngIf="isEditMode" class="form-title-icon">&#9998;</span>
+        <span *ngIf="!isEditMode" class="form-title-icon">&#43;</span>
+        {{ isEditMode ? 'Edit Record #' + selectedItem?.id : 'Add New Record' }}
+      </span>
+      <button class="detail-form-close" (click)="cancelForm()">✕</button>
+    </div>
+
+    <div class="detail-form-body">
+      <div class="detail-form-grid">
+        <div class="detail-form-section-label section-location">
+          <span class="section-bar"></span>
+          <span class="section-text">Step 1 — Location Details</span>
+        </div>
+
+        <div class="detail-form-group">
+          <label class="detail-form-label">Location</label>
+          <input type="text" class="detail-form-input" [(ngModel)]="formData.location" placeholder="Enter location" />
+        </div>
+
+        <div class="detail-form-group">
+          <label class="detail-form-label">Barangay</label>
+          <input type="text" class="detail-form-input" [(ngModel)]="formData.barangay" placeholder="Enter barangay" />
+        </div>
+
+        <div class="detail-form-group">
+          <label class="detail-form-label">City / Municipality</label>
+          <input type="text" class="detail-form-input" [(ngModel)]="formData.cityMunicipality" placeholder="Enter city or municipality" />
+        </div>
+
+        <div class="detail-form-group">
+          <label class="detail-form-label">Province</label>
+          <input type="text" class="detail-form-input" [(ngModel)]="formData.province" placeholder="Enter province" />
+        </div>
+
+        <div class="detail-form-section-label section-schedule">
+          <span class="section-bar"></span>
+          <span class="section-text">Step 2 — Validation Schedule</span>
+        </div>
+
+        <div class="detail-form-group">
+          <label class="detail-form-label">Validation Date</label>
+          <input type="date" class="detail-form-input" [(ngModel)]="formData.validationDate" />
+        </div>
+
+        <div class="detail-form-group">
+          <label class="detail-form-label">Validation Time</label>
+          <input type="time" class="detail-form-input" [(ngModel)]="formData.validationTime" />
+        </div>
+
+        <div class="detail-form-section-label section-network">
+          <span class="section-bar"></span>
+          <span class="section-text">Step 3 — Network Information</span>
+        </div>
+
+        <div class="detail-form-group">
+          <label class="detail-form-label">Technology</label>
+          <div class="detail-form-select-wrap">
+            <select class="detail-form-input detail-form-select" [(ngModel)]="formData.technology">
+              <option value="">Select Technology</option>
+              <option value="LTE">LTE</option>
+              <option value="5G">5G</option>
+              <option value="3G">3G</option>
+              <option value="WiFi">WiFi</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="detail-form-group">
+          <label class="detail-form-label">Service Provider <span class="required-star">*</span></label>
+          <div class="detail-form-select-wrap">
+            <select class="detail-form-input detail-form-select" [(ngModel)]="formData.serviceProvider">
+              <option value="">Select Provider</option>
+              <option value="Smart">Smart</option>
+              <option value="Globe">Globe</option>
+              <option value="DITO">DITO</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="detail-form-section-label section-speed">
+          <span class="section-bar"></span>
+          <span class="section-text">Step 4 — Speed &amp; Signal Data</span>
+        </div>
+
+        <div class="detail-form-group">
+          <label class="detail-form-label">Upload (Mbps)</label>
+          <input type="number" class="detail-form-input" [(ngModel)]="formData.upload" placeholder="0.00" min="0" step="0.01" />
+        </div>
+
+        <div class="detail-form-group">
+          <label class="detail-form-label">Download (Mbps)</label>
+          <input type="number" class="detail-form-input" [(ngModel)]="formData.download" placeholder="0.00" min="0" step="0.01" />
+        </div>
+
+        <div class="detail-form-group">
+          <label class="detail-form-label">Signal Strength</label>
+          <input type="text" class="detail-form-input" [(ngModel)]="formData.signalStrength" placeholder="e.g. -75" />
+        </div>
+
+        <div class="detail-form-group">
+          <label class="detail-form-label">Upload Data Size (MB)</label>
+          <input type="number" class="detail-form-input" [(ngModel)]="formData.uploadDataSize" placeholder="0.00" min="0" step="0.01" />
+        </div>
+
+        <div class="detail-form-group">
+          <label class="detail-form-label">Download Data Size (MB)</label>
+          <input type="number" class="detail-form-input" [(ngModel)]="formData.downloadDataSize" placeholder="0.00" min="0" step="0.01" />
+        </div>
+
+        <div class="detail-form-group"></div>
+        <div class="detail-form-section-label section-collected">
+          <span class="section-bar"></span>
+          <span class="section-text">Step 5 — Collected By</span>
+        </div>
+
+        <div class="detail-form-group">
+          <label class="detail-form-label">Name</label>
+          <input type="text" class="detail-form-input" [(ngModel)]="formData.collectedBy" placeholder="Enter name" />
+        </div>
+
+        <div class="detail-form-group"></div>
+
+      </div>
+
+      <div class="detail-form-error" *ngIf="formErrorMessage">
+        {{ formErrorMessage }}
+      </div>
+    </div>
+
+    <div class="detail-form-footer">
+      <button class="btn-form-cancel" (click)="cancelForm()">Cancel</button>
+      <button class="btn-form-save" (click)="saveForm()" [disabled]="isSavingForm">
+        <span *ngIf="isSavingForm">Saving...</span>
+        <span *ngIf="!isSavingForm">{{ isEditMode ? 'Update' : 'Save' }}</span>
+      </button>
+    </div>
+
+  </div>
 </div>

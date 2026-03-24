@@ -36,21 +36,17 @@ interface TabDef {
 })
 export class CallSignComponent implements OnInit {
   tabs: TabDef[] = [
-    { key: 'portable',  label: 'Portable Govt',},
-    { key: 'fb',        label: 'FB Govt'},
-    { key: 'mobile',    label: 'Mobile Govt'},
-    { key: 'fx',        label: 'FX Govt'},
-    { key: 'repeater',  label: 'Repeater'},
+    { key: 'portable',  label: 'Portable Govt' },
+    { key: 'fb',        label: 'FB Govt' },
+    { key: 'mobile',    label: 'Mobile Govt' },
+    { key: 'fx',        label: 'FX Govt' },
+    { key: 'repeater',  label: 'Repeater' },
   ];
   activeTab: string = 'fb';
   tabIndex: number = 1;
 
   private allDataByTab: Record<string, CallSignData[]> = {
-    portable: [],
-    fb: [],
-    mobile: [],
-    fx: [],
-    repeater: [],
+    portable: [], fb: [], mobile: [], fx: [], repeater: [],
   };
 
   allData: CallSignData[] = [];
@@ -58,7 +54,7 @@ export class CallSignComponent implements OnInit {
   pagedData: CallSignData[] = [];
 
   searchTerm: string = '';
-
+  
   currentPage: number = 1;
   pageSize: number = 10;
   totalPages: number = 1;
@@ -71,13 +67,20 @@ export class CallSignComponent implements OnInit {
   provinceStats: ProvinceStats[] = [];
   licenseeStats: LicenseeStats = { lguUnits: 0, municipalities: 0, uniqueLocations: 0 };
 
+  showDetailForm: boolean = false;
+  isEditMode: boolean = false;
+  isSavingForm: boolean = false;
+  selectedItem: any = null;
+  formErrorMessage: string = '';
+  formData: any = {
+    callSign: '', licensee: '', txFreq: '', rxFreq: '',
+    location: '', equipment: '', serialNumber: '',
+    source: '', issued: '', collectedBy: ''
+  };
+
   private readonly PROVINCES: string[] = [
-    'Albay',
-    'Camarines Norte',
-    'Camarines Sur',
-    'Catanduanes',
-    'Masbate',
-    'Sorsogon'
+    'Albay', 'Camarines Norte', 'Camarines Sur',
+    'Catanduanes', 'Masbate', 'Sorsogon'
   ];
 
   constructor(private router: Router, private callSignService: CallSignService) {}
@@ -110,6 +113,7 @@ export class CallSignComponent implements OnInit {
 
   onTabChange(tabKey: string): void {
     this.activeTab = tabKey;
+    this.tabIndex = this.tabs.findIndex(t => t.key === tabKey);
     this.allData = this.allDataByTab[tabKey] ?? [];
     this.searchTerm = '';
     this.currentPage = 1;
@@ -124,7 +128,7 @@ export class CallSignComponent implements OnInit {
     const withFreq = data.filter(d => d.txFreq && d.txFreq.trim() !== '');
     const withoutFreq = data.filter(d => !d.txFreq || d.txFreq.trim() === '');
     const uniqueLocs = new Set(data.map(d => d.location).filter(Boolean));
-
+    
     this.allStats = {
       totalRegistered: data.length,
       withFrequency: withFreq.length,
@@ -189,12 +193,8 @@ export class CallSignComponent implements OnInit {
 
   sortBy(column: string): void {
     if (this.sortColumn === column) {
-      if (this.sortDirection === 'asc') {
-        this.sortDirection = 'desc';
-      } else {
-        this.sortColumn = null;
-        this.sortDirection = null;
-      }
+      if (this.sortDirection === 'asc') { this.sortDirection = 'desc'; }
+      else { this.sortColumn = null; this.sortDirection = null; }
     } else {
       this.sortColumn = column;
       this.sortDirection = 'asc';
@@ -259,17 +259,11 @@ export class CallSignComponent implements OnInit {
   }
 
   prevTab(): void {
-    if (this.tabIndex > 0) {
-      this.tabIndex--;
-      this.onTabChange(this.tabs[this.tabIndex].key);
-    }
+    if (this.tabIndex > 0) { this.tabIndex--; this.onTabChange(this.tabs[this.tabIndex].key); }
   }
 
   nextTab(): void {
-    if (this.tabIndex < this.tabs.length - 1) {
-      this.tabIndex++;
-      this.onTabChange(this.tabs[this.tabIndex].key);
-    }
+    if (this.tabIndex < this.tabs.length - 1) { this.tabIndex++; this.onTabChange(this.tabs[this.tabIndex].key); }
   }
 
   goToTab(index: number): void {
@@ -278,4 +272,63 @@ export class CallSignComponent implements OnInit {
   }
 
   goBack(): void { this.router.navigate(['/task3']); }
+
+  openEditForm(item: any): void {
+    this.selectedItem = item;
+    this.isEditMode = true;
+    this.formErrorMessage = '';
+    this.formData = {
+      callSign: item.callSign ?? '',
+      licensee: item.licensee ?? '',
+      txFreq: item.txFreq ?? '',
+      rxFreq: item.rxFreq ?? '',
+      location: item.location ?? '',
+      equipment: item.equipment ?? '',
+      serialNumber: item.serialNumber ?? '',
+      source: item.source ?? '',
+      issued: item.issued ?? '',
+      collectedBy: item.collectedBy ?? ''
+    };
+    this.showDetailForm = true;
+  }
+
+  openAddForm(): void {
+    this.selectedItem = null;
+    this.isEditMode = false;
+    this.formErrorMessage = '';
+    this.formData = {
+      callSign: '', licensee: '', txFreq: '', rxFreq: '',
+      location: '', equipment: '', serialNumber: '',
+      source: '', issued: '', collectedBy: ''
+    };
+    this.showDetailForm = true;
+  }
+
+  cancelForm(): void {
+    this.showDetailForm = false;
+    this.formErrorMessage = '';
+  }
+
+  saveForm(): void {
+    if (!this.formData.licensee?.trim()) {
+      this.formErrorMessage = 'Licensee is required.';
+      return;
+    }
+    this.isSavingForm = true;
+    setTimeout(() => {
+      if (this.isEditMode && this.selectedItem) {
+        Object.assign(this.selectedItem, this.formData);
+      } else {
+        const newId = this.allData.length > 0
+          ? Math.max(...this.allData.map(d => Number(d.id) || 0)) + 1
+          : 1;
+        const newRecord: any = { id: newId, ...this.formData };
+        this.allData = [...this.allData, newRecord];
+        this.allDataByTab[this.activeTab] = this.allData;
+        this.applyFilterAndSort();
+      }
+      this.isSavingForm = false;
+      this.showDetailForm = false;
+    }, 300);
+  }
 }
