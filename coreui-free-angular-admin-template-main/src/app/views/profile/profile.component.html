@@ -128,4 +128,119 @@
 
       </div>
     </div>
+
+    <div class="tab-content" *ngIf="activeTab === 'kpi'">
+      <div class="kpi-section">
+
+        <div class="section-toolbar">
+          <div class="toolbar-left">
+            <span class="section-title">Individual KPI</span>
+          </div>
+          <div class="toolbar-right">
+            <div class="filter-group">
+              <label class="filter-label">Semester</label>
+              <select class="filter-select-sm" [(ngModel)]="selectedSemester" (change)="loadIndividualKpi()">
+                <option value="S1">1st Semester (Jan - Jun)</option>
+                <option value="S2">2nd Semester (Jul - Dec)</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Year</label>
+              <select class="filter-select-sm" [(ngModel)]="selectedYearKpi" (change)="loadIndividualKpi()">
+                <option *ngFor="let y of availableYears" [value]="y">{{ y }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="kpi-individual-cards" *ngIf="individualKpiData">
+
+          <div class="kpi-summary-cards">
+            <div class="summary-card">
+              <div class="summary-icon">&#9998;</div>
+              <div class="summary-label">Avg Commitment</div>
+              <div class="summary-value">{{ individualKpiData.avgCommitment }}</div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-icon">&#10003;</div>
+              <div class="summary-label">Avg Accomplishment</div>
+              <div class="summary-value">{{ individualKpiData.avgAccomplishment }}</div>
+            </div>
+            <div class="summary-card highlight-card">
+              <div class="summary-icon">&#11088;</div>
+              <div class="summary-label">Final Rating</div>
+              <div class="summary-value rating-value">{{ individualKpiData.finalRating }}</div>
+            </div>
+          </div>
+
+          <div class="kpi-details-table">
+            <h4 class="subsection-title">KPI Performance by Category</h4>
+            <table class="kpi-table">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Target</th>
+                  <th>Accomplishment</th>
+                  <th>Progress</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let cat of individualKpiData.categories">
+                  <td class="cat-label">{{ cat.label }}</td>
+                  <td>{{ cat.target | number }}</td>
+                  <td>{{ cat.accomplishment !== null ? (cat.accomplishment | number) : '—' }}</td>
+                  <td>
+                    <div class="progress-wrap">
+                      <div class="progress-mini">
+                        <div class="progress-bar-mini" [style.width.%]="cat.progress"></div>
+                      </div>
+                      <span class="progress-text">{{ cat.progress }}%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="status-badge"
+                      [class.completed]="cat.progress >= 100"
+                      [class.pending]="cat.progress < 100">
+                      {{ cat.progress >= 100 ? 'Completed' : 'In Progress' }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="target-summary">
+            <h4 class="subsection-title">Target vs Accomplishment</h4>
+            <div class="target-summary-stats">
+              <div class="stat-item">
+                <div class="stat-label">Total Target</div>
+                <div class="stat-sublabel">{{ selectedSemester === 'S1' ? '1st Semester' : '2nd Semester' }}</div>
+                <div class="stat-value">{{ individualKpiData.totalTarget | number }}</div>
+              </div>
+              <div class="stat-divider"></div>
+              <div class="stat-item">
+                <div class="stat-label">Total Accomplishment</div>
+                <div class="stat-sublabel">&nbsp;</div>
+                <div class="stat-value">
+                  {{ individualKpiData.totalAccomplishment !== null ? (individualKpiData.totalAccomplishment | number) : '—' }}
+                </div>
+              </div>
+              <div class="stat-divider"></div>
+              <div class="stat-item">
+                <div class="stat-label">Overall Progress</div>
+                <div class="stat-sublabel">&nbsp;</div>
+                <div class="stat-value">{{ individualKpiData.overallProgress }}%</div>
+                <div class="progress-large">
+                  <div class="progress-fill-large" [style.width.%]="individualKpiData.overallProgress"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>

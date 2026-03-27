@@ -1,8 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { DailyTimeRecordService, DtrRecord } from '../DailyTimeRecord/DailyTimeRecord.service';
+import { KpiInspectionService, SemesterKey } from '../kpi-inspection/kpi-inspection.service';
+import { AuthService } from '../../services/auth.service';
+
+interface IndividualKpiData {
+  avgCommitment: string;
+  avgAccomplishment: string;
+  finalRating: string;
+  totalTarget: number;
+  totalAccomplishment: number | null;
+  overallProgress: number;
+  categories: Array<{
+    label: string;
+    target: number;
+    accomplishment: number | null;
+    progress: number;
+  }>;
+}
 
 @Component({
   selector: 'app-profile',
@@ -13,7 +30,9 @@ import { DailyTimeRecordService, DtrRecord } from '../DailyTimeRecord/DailyTimeR
 })
 export class ProfileComponent implements OnInit {
 
-  userRole: string = 'HR';
+  private authService = inject(AuthService);
+
+  userRole: string = '';
   currentUser: string = 'Andrei F. Imperial';
 
   filteredRecords: DtrRecord[] = [];
@@ -37,10 +56,18 @@ export class ProfileComponent implements OnInit {
   editingRemark: string = '';
 
   activeTab: string = 'dtr';
+  selectedSemester: SemesterKey = 'S1';
+  selectedYearKpi: number = 2026;
+  availableYears: number[] = [2024, 2025, 2026, 2027, 2028, 2029, 2030];
+  individualKpiData: IndividualKpiData | null = null;
 
-  constructor(private dtrService: DailyTimeRecordService) {}
+  constructor(
+    private dtrService: DailyTimeRecordService,
+    private kpiService: KpiInspectionService
+  ) {}
 
   ngOnInit(): void {
+    this.userRole = this.authService.getUserRole();
     this.personnelList = this.dtrService.getPersonnelList();
 
     if (this.userRole === 'HR') {
@@ -51,11 +78,13 @@ export class ProfileComponent implements OnInit {
     }
 
     this.loadDtrData();
+    this.loadIndividualKpi();
   }
 
   onPersonnelChange(): void {
     this.displayPersonnel = this.selectedPersonnel;
     this.loadDtrData();
+    this.loadIndividualKpi();
   }
 
   onDtrFilterChange(): void {
@@ -68,6 +97,71 @@ export class ProfileComponent implements OnInit {
     this.filteredRecords = this.dtrService.getMonthlyRecords(
       personnel, this.selectedYear, this.selectedMonth
     );
+  }
+
+  loadIndividualKpi(): void {
+    const personnel = this.userRole === 'HR' ? this.selectedPersonnel : this.currentUser;
+    if (!personnel) return;
+
+    this.kpiService.getCategoryData(this.selectedYearKpi, this.selectedSemester).subscribe(categories => {
+      const categoryProgress = categories.map(cat => {
+        const progress = cat.totalAccomplishment !== null && cat.totalTarget > 0
+          ? Math.min(100, Math.round((cat.totalAccomplishment / cat.totalTarget) * 100))
+          : 0;
+        return {
+          label: cat.label,
+          target: cat.totalTarget,
+          accomplishment: cat.totalAccomplishment,
+          progress
+        };
+      });
+
+      const totalTarget = categoryProgress.reduce((s, c) => s + c.target, 0);
+      const totalAccomplishment = categoryProgress.every(c => c.accomplishment === null)
+        ? null
+        : categoryProgress.reduce((s, c) => s + (c.accomplishment || 0), 0);
+      const overallProgress = totalAccomplishment !== null && totalTarget > 0
+        ? Math.min(100, Math.round((totalAccomplishment / totalTarget) * 100))
+        : 0;
+
+      this.kpiService.getKpiData().subscribe(kpiData => {
+        const personData = kpiData.find(k => k.inspector === personnel);
+
+        if (personData) {
+          this.individualKpiData = {
+            avgCommitment: this.kpiService.computeAvg([
+              personData.commitment.quality,
+              personData.commitment.efficiency,
+              personData.commitment.timeliness
+            ]),
+            avgAccomplishment: this.kpiService.computeAvg([
+              personData.actual.quality,
+              personData.actual.efficiency,
+              personData.actual.timeliness
+            ]),
+            finalRating: this.kpiService.getRatingLabel(
+              personData.rating.quality,
+              personData.rating.efficiency,
+              personData.rating.timeliness
+            ),
+            totalTarget,
+            totalAccomplishment,
+            overallProgress,
+            categories: categoryProgress
+          };
+        } else {
+          this.individualKpiData = {
+            avgCommitment: '0.00',
+            avgAccomplishment: '0.00',
+            finalRating: 'No Data',
+            totalTarget,
+            totalAccomplishment,
+            overallProgress,
+            categories: categoryProgress
+          };
+        }
+      });
+    });
   }
 
   setActiveTab(tab: string): void {

@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { divisionHeadGuard } from './guards/role.guard';
 
 export const routes: Routes = [
   {
@@ -91,6 +92,7 @@ export const routes: Routes = [
           import('./views/kpi-inspection/kpi-inspection.component').then(
             m => m.KpiInspectionComponent
           ),
+        canActivate: [divisionHeadGuard],
         data: { title: 'KPI Inspection', role: 'DIVISION_HEAD' }
       },
       {
