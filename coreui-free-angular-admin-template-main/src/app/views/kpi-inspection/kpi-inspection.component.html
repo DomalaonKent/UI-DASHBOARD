@@ -10,12 +10,52 @@
     </a>
   </div>
 
+  <div class="semester-selector-row mb-4">
+    <div class="year-dropdown-wrap">
+      <span class="sem-label">Year</span>
+      <div class="year-dropdown" [class.open]="yearDropdownOpen">
+        <button class="year-trigger" (click)="toggleYearDropdown()">
+          {{ selectedYear }}
+          <span class="year-chevron">▾</span>
+        </button>
+        <div class="year-menu" *ngIf="yearDropdownOpen">
+          <button
+            *ngFor="let y of availableYears"
+            class="year-option"
+            [class.active]="selectedYear === y"
+            (click)="selectYear(y)">
+            {{ y }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sem-toggle-group">
+      <button
+        class="sem-btn"
+        [class.active]="selectedSemester === 'S1'"
+        (click)="selectSemester('S1')">
+        1st Semester
+        <span class="sem-sub">Jan – Jun</span>
+      </button>
+      <button
+        class="sem-btn"
+        [class.active]="selectedSemester === 'S2'"
+        (click)="selectSemester('S2')">
+        2nd Semester
+        <span class="sem-sub">Jul – Dec</span>
+      </button>
+    </div>
+
+    <div class="sem-active-badge">
+      {{ selectedYear }} · {{ semesterLabel[selectedSemester] }}
+    </div>
+  </div>
+
   <c-row class="mb-4">
     <c-col xs="12" sm="6" lg="3">
       <div class="stat-card stat-purple mb-3">
-        <div class="stat-head">
-          Inspectors
-        </div>
+        <div class="stat-head">Inspectors</div>
         <div class="stat-body">
           <div class="stat-value">{{ kpiData.length }}</div>
         </div>
@@ -23,9 +63,7 @@
     </c-col>
     <c-col xs="12" sm="6" lg="3">
       <div class="stat-card stat-blue mb-3">
-        <div class="stat-head">
-          Avg Commitment
-        </div>
+        <div class="stat-head">Avg Commitment</div>
         <div class="stat-body">
           <div class="stat-value">{{ avgCommitment }}</div>
         </div>
@@ -33,9 +71,7 @@
     </c-col>
     <c-col xs="12" sm="6" lg="3">
       <div class="stat-card stat-green mb-3">
-        <div class="stat-head">
-          Avg Accomplishment
-        </div>
+        <div class="stat-head">Avg Accomplishment</div>
         <div class="stat-body">
           <div class="stat-value">{{ avgAccomplishment }}</div>
         </div>
@@ -43,9 +79,7 @@
     </c-col>
     <c-col xs="12" sm="6" lg="3">
       <div class="stat-card stat-yellow mb-3">
-        <div class="stat-head">
-          Avg Final Rating
-        </div>
+        <div class="stat-head">Avg Final Rating</div>
         <div class="stat-body">
           <div class="stat-value">{{ avgFinalRating }}</div>
         </div>
@@ -53,7 +87,23 @@
     </c-col>
   </c-row>
 
-  <c-row>
+  <div class="kpi-tab-nav mb-4">
+    <button
+      class="kpi-tab-btn"
+      [class.active]="activeTab === 'kpi'"
+      (click)="setActiveTab('kpi')">
+      KPI Ratings
+    </button>
+    <button
+      *ngFor="let tabKey of categoryTabKeys"
+      class="kpi-tab-btn"
+      [class.active]="activeTab === tabKey"
+      (click)="setActiveTab(tabKey)">
+      {{ categoryTabLabels[tabKey] }}
+    </button>
+  </div>
+
+  <c-row *ngIf="activeTab === 'kpi'">
 
     <c-col xs="12" lg="4" class="mb-4">
       <div class="kpi-panel">
@@ -73,10 +123,8 @@
         <div class="rows-scroll">
           <div class="inspector-row" *ngFor="let k of kpiData; let i = index">
             <div class="col-inspector">
-              <div class="row-avatar" [style.background]="k.photo ? 'transparent' : getAvatarColor(i)">
-                <img *ngIf="k.photo" [src]="k.photo" [alt]="k.inspector"
-                     class="avatar-img"
-                     (error)="k.photo = undefined" />
+              <div class="row-avatar" [style.background]="getAvatarColor(i)">
+                <img *ngIf="k.photo" [src]="k.photo" [alt]="k.inspector" class="avatar-img" (error)="k.photo = undefined" />
                 <span *ngIf="!k.photo">{{ k.inspector.charAt(0) }}</span>
               </div>
               <div class="row-name-block">
@@ -110,10 +158,8 @@
         <div class="rows-scroll">
           <div class="inspector-row" *ngFor="let k of kpiData; let i = index">
             <div class="col-inspector">
-              <div class="row-avatar" [style.background]="k.photo ? 'transparent' : getAvatarColor(i)">
-                <img *ngIf="k.photo" [src]="k.photo" [alt]="k.inspector"
-                     class="avatar-img"
-                     (error)="k.photo = undefined" />
+              <div class="row-avatar" [style.background]="getAvatarColor(i)">
+                <img *ngIf="k.photo" [src]="k.photo" [alt]="k.inspector" class="avatar-img" (error)="k.photo = undefined" />
                 <span *ngIf="!k.photo">{{ k.inspector.charAt(0) }}</span>
               </div>
               <div class="row-name-block">
@@ -147,10 +193,8 @@
         <div class="rows-scroll">
           <div class="inspector-row" *ngFor="let k of kpiData; let i = index">
             <div class="col-inspector">
-              <div class="row-avatar" [style.background]="k.photo ? 'transparent' : getAvatarColor(i)">
-                <img *ngIf="k.photo" [src]="k.photo" [alt]="k.inspector"
-                     class="avatar-img"
-                     (error)="k.photo = undefined" />
+              <div class="row-avatar" [style.background]="getAvatarColor(i)">
+                <img *ngIf="k.photo" [src]="k.photo" [alt]="k.inspector" class="avatar-img" (error)="k.photo = undefined" />
                 <span *ngIf="!k.photo">{{ k.inspector.charAt(0) }}</span>
               </div>
               <div class="row-name-block">
@@ -176,5 +220,119 @@
     </c-col>
 
   </c-row>
+
+  <ng-container *ngFor="let tabKey of categoryTabKeys">
+    <div class="cat-panel animated fadeIn" *ngIf="activeTab === tabKey">
+
+      <ng-container *ngIf="getCategoryForTab(tabKey) as cat; else noData">
+        <div class="cat-panel-header mb-4">
+          <div class="cat-panel-title-block">
+            <div>
+              <div class="cat-panel-title">{{ cat.label }}</div>
+              <div class="cat-panel-sem">
+                {{ selectedYear }} · {{ semesterLabel[selectedSemester] }}
+              </div>
+            </div>
+          </div>
+
+          <div class="cat-stat-cards">
+            <div class="cat-stat-card cat-stat-target">
+              <div class="cat-stat-label">Total Target</div>
+              <div class="cat-stat-value">{{ cat.totalTarget | number }}</div>
+              <div class="cat-stat-sub">semester target</div>
+            </div>
+            <div class="cat-stat-card cat-stat-accomp"
+                 [class.pending]="cat.totalAccomplishment === null">
+              <div class="cat-stat-label">Accomplishment</div>
+              <div class="cat-stat-value">
+                {{ cat.totalAccomplishment !== null ? (cat.totalAccomplishment | number) : '—' }}
+              </div>
+              <div class="cat-stat-sub" *ngIf="cat.totalAccomplishment !== null">
+                {{ rowProgress({ target: cat.totalTarget, accomplishment: cat.totalAccomplishment }) }}% of target
+              </div>
+              <div class="cat-stat-sub pending-text" *ngIf="cat.totalAccomplishment === null">
+                pending entry
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cat-table-wrap">
+          <table class="cat-table">
+            <thead>
+              <tr>
+                <th class="col-name">Name</th>
+                <th class="col-wt">Wt</th>
+                <th class="col-wtpct">Wt (%)</th>
+                <th class="col-target">Target</th>
+                <th class="col-accomp">Accomplishment</th>
+                <th class="col-progress">Progress</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of cat.rows" class="cat-row">
+                <td class="col-name">
+                  <span class="cat-name-avatar">{{ row.name.charAt(0) }}</span>
+                  {{ row.name }}
+                </td>
+                <td class="col-wt">{{ row.weight }}</td>
+                <td class="col-wtpct">{{ row.weightPct | number:'1.1-3' }}</td>
+                <td class="col-target">
+                  <span class="target-pill">{{ row.target | number }}</span>
+                </td>
+                <td class="col-accomp">
+                  <span *ngIf="row.accomplishment !== null" class="accomp-pill">
+                    {{ row.accomplishment | number }}
+                  </span>
+                  <span *ngIf="row.accomplishment === null" class="accomp-pending">—</span>
+                </td>
+                <td class="col-progress">
+                  <div class="progress-bar-wrap">
+                    <div class="progress-bar-track">
+                      <div class="progress-bar-fill"
+                           [style.width.%]="rowProgress(row)"
+                           [class.fill-done]="rowProgress(row) >= 100"
+                           [class.fill-pending]="row.accomplishment === null">
+                      </div>
+                    </div>
+                    <span class="progress-pct" *ngIf="row.accomplishment !== null">
+                      {{ rowProgress(row) }}%
+                    </span>
+                    <span class="progress-pct pending-text" *ngIf="row.accomplishment === null">—</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr class="cat-footer-row">
+                <td class="col-name">Total</td>
+                <td class="col-wt">{{ getTotalWeight(tabKey) }}</td>
+                <td class="col-wtpct">{{ getTotalWeightPct(tabKey) | number:'1.0-0' }}</td>
+                <td class="col-target">
+                  <span class="target-pill">{{ cat.totalTarget | number }}</span>
+                </td>
+                <td class="col-accomp">
+                  <span *ngIf="cat.totalAccomplishment !== null" class="accomp-pill">
+                    {{ cat.totalAccomplishment | number }}
+                  </span>
+                  <span *ngIf="cat.totalAccomplishment === null" class="accomp-pending">—</span>
+                </td>
+                <td class="col-progress"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+      </ng-container>
+
+      <ng-template #noData>
+        <div class="cat-no-data">
+          No data available for {{ selectedYear }} · {{ semesterLabel[selectedSemester] }}
+        </div>
+      </ng-template>
+
+    </div>
+  </ng-container>
+
 </div>
 </div>

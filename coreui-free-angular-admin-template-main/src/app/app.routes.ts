@@ -90,7 +90,14 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./views/kpi-inspection/kpi-inspection.component').then(
             m => m.KpiInspectionComponent
-          )
+          ),
+        data: { title: 'KPI Inspection', role: 'DIVISION_HEAD' }
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./views/profile/profile.component').then(m => m.ProfileComponent),
+        data: { title: 'Employee Profile' }
       },
       {
         path: 'theme',

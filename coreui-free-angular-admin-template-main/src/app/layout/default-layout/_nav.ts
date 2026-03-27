@@ -35,7 +35,7 @@ export const navItems: INavData[] = [
       },
       {
         name: 'Inspection',
-        url: '/',
+        url: '/kpi-inspection',  
         icon: 'nav-icon-bullet'
       }
     ]
@@ -45,10 +45,33 @@ export const navItems: INavData[] = [
     url: '/fad',
     icon: 'icon-fad',
     children: [
-      { name: 'HR',             url: '/',                   icon: 'nav-icon-bullet' },
-      { name: 'DTR',            url: '/daily-time-record',  icon: 'nav-icon-bullet' },
-      { name: 'General Supply', url: '/',                   icon: 'nav-icon-bullet' },
-      { name: 'Accounting',     url: '/',                   icon: 'nav-icon-bullet' }
+      { 
+        name: 'HR',             
+        url: '/',                   
+        icon: 'nav-icon-bullet',
+        children: [
+          {
+            name: 'Profile',  
+            url: '/profile',
+            icon: 'nav-icon-bullet'
+          },
+          {
+            name: 'DTR',             
+            url: '/daily-time-record',
+            icon: 'nav-icon-bullet'
+          }
+        ]
+      },
+      { 
+        name: 'General Supply', 
+        url: '/',                   
+        icon: 'nav-icon-bullet' 
+      },
+      { 
+        name: 'Accounting',     
+        url: '/',                   
+        icon: 'nav-icon-bullet' 
+      }
     ]
   }
 ];

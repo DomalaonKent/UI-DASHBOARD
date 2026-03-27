@@ -4,11 +4,28 @@ import { Observable, of } from 'rxjs';
 export interface KPIEntry {
   inspector: string;
   period: string;
-  photo?: string;  
+  photo?: string;
   commitment:  { quality: number; efficiency: number; timeliness: number };
   actual:      { quality: number; efficiency: number; timeliness: number };
   rating:      { quality: number; efficiency: number; timeliness: number };
 }
+
+export interface KpiCategoryRow {
+  name: string;
+  weight: number;
+  weightPct: number;
+  target: number;
+  accomplishment: number | null;
+}
+
+export interface KpiCategoryData {
+  label: string;
+  totalTarget: number;
+  totalAccomplishment: number | null;
+  rows: KpiCategoryRow[];
+}
+
+export type SemesterKey = 'S1' | 'S2';
 
 @Injectable({ providedIn: 'root' })
 export class KpiInspectionService {
@@ -72,8 +89,96 @@ export class KpiInspectionService {
     },
   ];
 
+  private buildCategories(): KpiCategoryData[] {
+    return [
+      {
+        label: 'Processing w/o Encoding and Printing',
+        totalTarget: 11046,
+        totalAccomplishment: null,
+        rows: [
+          { name: 'Mon',     weight: 30, weightPct: 22.00, target: 2430, accomplishment: null },
+          { name: 'Ryan',    weight: 25, weightPct: 19.00, target: 2099, accomplishment: null },
+          { name: 'Bart',    weight: 30, weightPct: 22.00, target: 2430, accomplishment: null },
+          { name: 'Dan',     weight: 30, weightPct: 22.00, target: 2430, accomplishment: null },
+          { name: 'Francis', weight: 20, weightPct: 15.00, target: 1657, accomplishment: null },
+        ],
+      },
+      {
+        label: 'Encoding and Printing',
+        totalTarget: 11046,
+        totalAccomplishment: null,
+        rows: [
+          { name: 'Ryan',    weight: 10, weightPct: 6.0,  target: 663,  accomplishment: null },
+          { name: 'Bart',    weight: 5,  weightPct: 3.0,  target: 331,  accomplishment: null },
+          { name: 'Dan',     weight: 5,  weightPct: 3.0,  target: 331,  accomplishment: null },
+          { name: 'Francis', weight: 10, weightPct: 6.0,  target: 663,  accomplishment: null },
+          { name: 'Ed',      weight: 75, weightPct: 42.0, target: 4639, accomplishment: null },
+          { name: 'Luis',    weight: 70, weightPct: 40.0, target: 4419, accomplishment: null },
+        ],
+      },
+      {
+        label: 'Inspection',
+        totalTarget: 3890,
+        totalAccomplishment: null,
+        rows: [
+          { name: 'Gie',     weight: 30, weightPct: 17.000, target: 661, accomplishment: null },
+          { name: 'Mon',     weight: 20, weightPct: 12.000, target: 467, accomplishment: null },
+          { name: 'Francis', weight: 20, weightPct: 12.000, target: 467, accomplishment: null },
+          { name: 'Ryan',    weight: 30, weightPct: 17.000, target: 661, accomplishment: null },
+          { name: 'Bart',    weight: 25, weightPct: 15.000, target: 584, accomplishment: null },
+          { name: 'Dan',     weight: 25, weightPct: 15.000, target: 584, accomplishment: null },
+          { name: 'Ed',      weight: 10, weightPct: 6.000,  target: 233, accomplishment: null },
+          { name: 'Luis',    weight: 10, weightPct: 6.000,  target: 233, accomplishment: null },
+        ],
+      },
+      {
+        label: 'Frequency Assignment',
+        totalTarget: 1006,
+        totalAccomplishment: null,
+        rows: [
+          { name: 'Mon',     weight: 20, weightPct: 67, target: 674, accomplishment: null },
+          { name: 'Francis', weight: 10, weightPct: 33, target: 332, accomplishment: null },
+        ],
+      },
+      {
+        label: 'Validation of Broadband Speed',
+        totalTarget: 180,
+        totalAccomplishment: null,
+        rows: [
+          { name: 'Mon',     weight: 10, weightPct: 23,  target: 41, accomplishment: null },
+          { name: 'Francis', weight: 5,  weightPct: 11,  target: 21, accomplishment: null },
+          { name: 'Ryan',    weight: 5,  weightPct: 11,  target: 21, accomplishment: null },
+          { name: 'Bart',    weight: 10, weightPct: 23,  target: 41, accomplishment: null },
+          { name: 'Dan',     weight: 10, weightPct: 23,  target: 41, accomplishment: null },
+          { name: 'Ed',      weight: 2,  weightPct: 4.5, target: 8,  accomplishment: null },
+          { name: 'Luis',    weight: 2,  weightPct: 4.5, target: 8,  accomplishment: null },
+        ],
+      },
+    ];
+  }
+
+  private makeCategories(): Record<SemesterKey, KpiCategoryData[]> {
+    return { S1: this.buildCategories(), S2: this.buildCategories() };
+  }
+
+  private categoryData: Record<number, Record<SemesterKey, KpiCategoryData[]>> = {
+    2024: this.makeCategories(),
+    2025: this.makeCategories(),
+    2026: this.makeCategories(),
+    2027: this.makeCategories(),
+  };
+
   getKpiData(): Observable<KPIEntry[]> {
     return of(this.mockData);
+  }
+
+  getCategoryData(year: number, semester: SemesterKey): Observable<KpiCategoryData[]> {
+    const data = this.categoryData[year]?.[semester] ?? [];
+    return of(data);
+  }
+
+  getAvailableYears(): number[] {
+    return Object.keys(this.categoryData).map(Number).sort((a, b) => b - a);
   }
 
   getAvatarColors(): string[] {
