@@ -13,43 +13,28 @@ export const routes: Routes = [
     data: {
       title: 'Home'
     },
-    
-    
     children: [
       {
         path: 'dashboard',
         loadChildren: () => import('./views/dashboard/routes').then((m) => m.routes)
       },
       {
-      path: 'task3',
-      loadComponent: () => import('./views/task3/task3.component').then(m => m.Task3Component),
-      data: { title: 'Task3' }
+        path: 'task3',
+        loadComponent: () => import('./views/task3/task3.component').then(m => m.Task3Component),
+        data: { title: 'Task3' }
       },
       {
-      path: 'connectivity-dashboard',
-      loadComponent: () => import('./views/connectivity-dashboard/connectivity-dashboard.component')
-        .then(m => m.ConnectivityDashboardComponent),
-      data: { title: 'Connectivity Datas' }
+        path: 'connectivity-dashboard',
+        loadComponent: () => import('./views/connectivity-dashboard/connectivity-dashboard.component')
+          .then(m => m.ConnectivityDashboardComponent),
+        data: { title: 'Connectivity Datas' }
       },
       {
-      path: 'dashboard',
-      loadComponent: () => import('./views/dashboard/dashboard.component').then(m => m.DashboardComponent),
-      data: { title: 'Dashboard' }
-      },
-      {
-        path: 'dashboard',
-        loadComponent: () => import('./views/dashboard/dashboard.component').then(m => m.DashboardComponent),
-        data: 
-      {
-        title: 'OJT Dashboard'
-      }
-      },
-      {
-      path: 'call-sign',
-      loadComponent: () =>
-        import('./views/call-sign/call-sign.component')
-          .then(m => m.CallSignComponent),
-      data: { title: 'Call Sign' }
+        path: 'call-sign',
+        loadComponent: () =>
+          import('./views/call-sign/call-sign.component')
+            .then(m => m.CallSignComponent),
+        data: { title: "Gov't Call Sign" }
       },
       {
         path: 'non-gov-call-sign',
@@ -59,11 +44,25 @@ export const routes: Routes = [
         data: { title: "Non-Gov't Call Sign" }
       },
       {
+        path: 'frequency-gov',
+        loadComponent: () =>
+          import('./views/gov-frequency/gov-frequency.component')
+            .then(m => m.GovFrequencyComponent),
+        data: { title: "Gov't Frequency" }
+      },
+      {
+        path: 'frequency-non-gov',
+        loadComponent: () =>
+          import('./views/non-gov-frequency/non-gov-frequency.component')
+            .then(m => m.NonGovFrequencyComponent),
+        data: { title: "Non-Gov't Frequency" }
+      },
+      {
         path: 'prs',
         loadComponent: () =>
           import('./views/prs/prs.component')
             .then(m => m.PrsComponent),
-        data: { title: "Prs" }
+        data: { title: 'Prs' }
       },
       {
         path: 'visitor-logbook',
@@ -117,7 +116,6 @@ export const routes: Routes = [
         path: 'forms',
         loadChildren: () => import('./views/forms/routes').then((m) => m.routes)
       },
-      
       {
         path: 'icons',
         loadChildren: () => import('./views/icons/routes').then((m) => m.routes)
@@ -143,16 +141,12 @@ export const routes: Routes = [
   {
     path: '404',
     loadComponent: () => import('./views/pages/page404/page404.component').then(m => m.Page404Component),
-    data: {
-      title: 'Page 404'
-    }
+    data: { title: 'Page 404' }
   },
   {
     path: '500',
     loadComponent: () => import('./views/pages/page500/page500.component').then(m => m.Page500Component),
-    data: {
-      title: 'Page 500'
-    }
+    data: { title: 'Page 500' }
   },
   {
     path: 'login',
@@ -161,7 +155,7 @@ export const routes: Routes = [
     data: { title: 'NTC Login' }
   },
   {
-    path: 'login1',                                          
+    path: 'login1',
     loadComponent: () =>
       import('./views/login1/login1.component').then(m => m.Login1Component),
     data: { title: 'NTC Login v2' }
@@ -169,9 +163,7 @@ export const routes: Routes = [
   {
     path: 'register',
     loadComponent: () => import('./views/pages/register/register.component').then(m => m.RegisterComponent),
-    data: {
-      title: 'Register Page'
-    }
+    data: { title: 'Register Page' }
   },
   { path: '**', redirectTo: 'login1' }
 ];

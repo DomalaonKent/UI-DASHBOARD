@@ -19,7 +19,43 @@ export const navItems: INavData[] = [
       {
         name: 'Licensing',
         url: '/',
-        icon: 'nav-icon-bullet'
+        icon: 'nav-icon-bullet',
+        children: [
+          {
+            name: 'Call-Sign',
+            url: '/',
+            icon: 'nav-icon-bullet',
+            children: [
+              {
+                name: "Gov't",
+                url: '/call-sign',
+                icon: 'nav-icon-bullet'
+              },
+              {
+                name: "Non Gov't",
+                url: '/non-gov-call-sign',
+                icon: 'nav-icon-bullet'
+              }
+            ]
+          },
+          {
+            name: 'Frequency',
+            url: '/',
+            icon: 'nav-icon-bullet',
+            children: [
+              {
+                name: "Gov't",
+                url: '/frequency-gov',
+                icon: 'nav-icon-bullet'
+              },
+              {
+                name: "Non Gov't",
+                url: '/frequency-non-gov',
+                icon: 'nav-icon-bullet'
+              }
+            ]
+          }
+        ]
       },
       {
         name: 'Monitoring',
@@ -28,14 +64,14 @@ export const navItems: INavData[] = [
         children: [
           {
             name: 'Validation',
-            url: '/connectivity-dashboard',
+            url: '/connectivity-dashboard',  
             icon: 'nav-icon-bullet'
           }
         ]
       },
       {
         name: 'Inspection',
-        url: '/kpi-inspection',  
+        url: '/kpi-inspection',
         icon: 'nav-icon-bullet'
       }
     ]
@@ -45,32 +81,32 @@ export const navItems: INavData[] = [
     url: '/fad',
     icon: 'icon-fad',
     children: [
-      { 
-        name: 'HR',             
-        url: '/',                   
+      {
+        name: 'HR',
+        url: '/',
         icon: 'nav-icon-bullet',
         children: [
           {
-            name: 'Profile',  
+            name: 'Profile',
             url: '/profile',
             icon: 'nav-icon-bullet'
           },
           {
-            name: 'DTR',             
+            name: 'DTR',
             url: '/daily-time-record',
             icon: 'nav-icon-bullet'
           }
         ]
       },
-      { 
-        name: 'General Supply', 
-        url: '/',                   
-        icon: 'nav-icon-bullet' 
+      {
+        name: 'General Supply',
+        url: '/',
+        icon: 'nav-icon-bullet'
       },
-      { 
-        name: 'Accounting',     
-        url: '/',                   
-        icon: 'nav-icon-bullet' 
+      {
+        name: 'Accounting',
+        url: '/',
+        icon: 'nav-icon-bullet'
       }
     ]
   }

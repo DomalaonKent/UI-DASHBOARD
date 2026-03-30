@@ -1,0 +1,320 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { NonGovFrequencyService, FrequencyData } from './non-gov-frequency.service';
+
+interface AllStats {
+  totalRegistered: number;
+  withFrequency: number;
+  withoutFrequency: number;
+}
+
+interface LicenseeStats {
+  lguUnits: number;
+  municipalities: number;
+  uniqueLocations: number;
+}
+
+interface ProvinceStats {
+  name: string;
+  count: number;
+}
+
+interface TabDef {
+  key: string;
+  label: string;
+}
+
+@Component({
+  selector: 'app-non-gov-frequency',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './non-gov-frequency.component.html',
+  styleUrls: ['./non-gov-frequency.component.scss']
+})
+export class NonGovFrequencyComponent implements OnInit {
+  tabs: TabDef[] = [
+    { key: 'portable', label: 'Portable Non-Gov' },
+    { key: 'fb',       label: 'FB Non-Gov' },
+    { key: 'mobile',   label: 'Mobile Non-Gov' },
+    { key: 'fx',       label: 'FX Non-Gov' },
+    { key: 'repeater', label: 'Repeater' },
+  ];
+  activeTab: string = 'fb';
+  tabIndex: number = 1;
+
+  private allDataByTab: Record<string, FrequencyData[]> = {
+    portable: [], fb: [], mobile: [], fx: [], repeater: [],
+  };
+
+  allData: FrequencyData[] = [];
+  filteredData: FrequencyData[] = [];
+  pagedData: FrequencyData[] = [];
+
+  searchTerm: string = '';
+  currentPage: number = 1;
+  pageSize: number = 10;
+  totalPages: number = 1;
+  pageSizeOptions: number[] = [10, 25, 50, 100];
+
+  sortColumn: string | null = null;
+  sortDirection: 'asc' | 'desc' | null = null;
+
+  allStats: AllStats = { totalRegistered: 0, withFrequency: 0, withoutFrequency: 0 };
+  provinceStats: ProvinceStats[] = [];
+  licenseeStats: LicenseeStats = { lguUnits: 0, municipalities: 0, uniqueLocations: 0 };
+
+  showDetailForm: boolean = false;
+  isEditMode: boolean = false;
+  isSavingForm: boolean = false;
+  selectedItem: any = null;
+  formErrorMessage: string = '';
+  formData: any = {
+    callSign: '', licensee: '', txFreq: '', rxFreq: '',
+    location: '', equipment: '', serialNumber: '',
+    source: '', issued: '', collectedBy: ''
+  };
+
+  private readonly PROVINCES: string[] = [
+    'Albay', 'Camarines Norte', 'Camarines Sur',
+    'Catanduanes', 'Masbate', 'Sorsogon'
+  ];
+
+  constructor(private router: Router, private freqService: NonGovFrequencyService) {}
+
+  ngOnInit(): void { this.loadData(); }
+
+  loadData(): void {
+    this.tabs.forEach(tab => {
+      this.freqService.getNonGovDataByType(tab.key).subscribe({
+        next: (data) => {
+          this.allDataByTab[tab.key] = data;
+          if (tab.key === this.activeTab) {
+            this.allData = data;
+            this.applyFilterAndSort();
+          }
+        },
+        error: () => {
+          this.allDataByTab[tab.key] = [];
+          if (tab.key === this.activeTab) {
+            this.allData = [];
+            this.applyFilterAndSort();
+          }
+        }
+      });
+    });
+  }
+
+  onTabChange(tabKey: string): void {
+    this.activeTab = tabKey;
+    this.tabIndex = this.tabs.findIndex(t => t.key === tabKey);
+    this.allData = this.allDataByTab[tabKey] ?? [];
+    this.searchTerm = '';
+    this.currentPage = 1;
+    this.sortColumn = null;
+    this.sortDirection = null;
+    this.applyFilterAndSort();
+  }
+
+  private computeStats(): void {
+    const data = this.filteredData;
+    const withFreq = data.filter(d => d.txFreq && d.txFreq.trim() !== '');
+    const uniqueLocs = new Set(data.map(d => d.location).filter(Boolean));
+
+    this.allStats = {
+      totalRegistered: data.length,
+      withFrequency: withFreq.length,
+      withoutFrequency: data.length - withFreq.length,
+    };
+
+    this.provinceStats = this.PROVINCES.map(province => ({
+      name: province,
+      count: data.filter(d =>
+        (d.location ?? '').toLowerCase().includes(province.toLowerCase())
+      ).length
+    }));
+
+    this.licenseeStats = {
+      lguUnits: data.filter(d => d.licensee?.toLowerCase().startsWith('lgu')).length,
+      municipalities: data.filter(d => d.licensee?.toLowerCase().startsWith('municipality')).length,
+      uniqueLocations: uniqueLocs.size
+    };
+  }
+
+  private applyFilterAndSort(): void {
+    let result = [...this.allData];
+    const term = this.searchTerm.toLowerCase().trim();
+    if (term) {
+      result = result.filter(item =>
+        String(item.id ?? '').toLowerCase().includes(term) ||
+        (item.callSign ?? '').toLowerCase().includes(term) ||
+        (item.licensee ?? '').toLowerCase().includes(term) ||
+        (item.txFreq ?? '').toLowerCase().includes(term) ||
+        (item.rxFreq ?? '').toLowerCase().includes(term) ||
+        (item.location ?? '').toLowerCase().includes(term) ||
+        (item.equipment ?? '').toLowerCase().includes(term) ||
+        (item.serialNumber ?? '').toLowerCase().includes(term) ||
+        (item.issued ?? '').toLowerCase().includes(term)
+      );
+    }
+
+    if (this.sortColumn && this.sortDirection) {
+      const col = this.sortColumn;
+      const dir = this.sortDirection === 'asc' ? 1 : -1;
+      result.sort((a, b) => {
+        if (col === 'id') return (Number(a.id) - Number(b.id)) * dir;
+        const aVal = String((a as any)[col] ?? '').trim();
+        const bVal = String((b as any)[col] ?? '').trim();
+        const aNum = parseFloat(aVal);
+        const bNum = parseFloat(bVal);
+        if (!isNaN(aNum) && !isNaN(bNum)) return (aNum - bNum) * dir;
+        if (!aVal && bVal) return 1;
+        if (aVal && !bVal) return -1;
+        return aVal.localeCompare(bVal) * dir;
+      });
+    }
+
+    this.filteredData = result;
+    this.applyPagination();
+    this.computeStats();
+  }
+
+  sortBy(column: string): void {
+    if (this.sortColumn === column) {
+      if (this.sortDirection === 'asc') this.sortDirection = 'desc';
+      else { this.sortColumn = null; this.sortDirection = null; }
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
+    }
+    this.currentPage = 1;
+    this.applyFilterAndSort();
+  }
+
+  getColSort(column: string): 'asc' | 'desc' | null {
+    return this.sortColumn === column ? this.sortDirection : null;
+  }
+
+  applyPagination(): void {
+    this.totalPages = Math.max(1, Math.ceil(this.filteredData.length / this.pageSize));
+    if (this.currentPage > this.totalPages) this.currentPage = this.totalPages;
+    const start = (this.currentPage - 1) * this.pageSize;
+    this.pagedData = this.filteredData.slice(start, start + this.pageSize);
+  }
+
+  goToPage(page: number): void {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    this.applyPagination();
+  }
+
+  onPageSizeChange(): void {
+    this.pageSize = Number(this.pageSize);
+    this.currentPage = 1;
+    this.applyPagination();
+  }
+
+  get pageStart(): number {
+    return this.filteredData.length === 0 ? 0 : (this.currentPage - 1) * this.pageSize + 1;
+  }
+
+  get pageEnd(): number {
+    return Math.min(this.currentPage * this.pageSize, this.filteredData.length);
+  }
+
+  get pageNumbers(): number[] {
+    const total = this.totalPages;
+    const current = this.currentPage;
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+    const pages: number[] = [1];
+    if (current > 3) pages.push(-1);
+    for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) pages.push(i);
+    if (current < total - 2) pages.push(-1);
+    pages.push(total);
+    return pages;
+  }
+
+  onSearch(): void { this.currentPage = 1; this.applyFilterAndSort(); }
+
+  getEquipmentClass(equipment: string | null): string {
+    const eq = equipment?.toLowerCase() ?? '';
+    if (eq.includes('icom')) return 'equip-icom';
+    if (eq.includes('kenwood')) return 'equip-kenwood';
+    return '';
+  }
+
+  prevTab(): void {
+    if (this.tabIndex > 0) { this.tabIndex--; this.onTabChange(this.tabs[this.tabIndex].key); }
+  }
+
+  nextTab(): void {
+    if (this.tabIndex < this.tabs.length - 1) { this.tabIndex++; this.onTabChange(this.tabs[this.tabIndex].key); }
+  }
+
+  goToTab(index: number): void { this.tabIndex = index; this.onTabChange(this.tabs[index].key); }
+
+  goBack(): void { this.router.navigate(['/task3']); }
+
+  openEditForm(item: any): void {
+    this.selectedItem = item;
+    this.isEditMode = true;
+    this.formErrorMessage = '';
+    this.formData = {
+      callSign: item.callSign ?? '', licensee: item.licensee ?? '',
+      txFreq: item.txFreq ?? '', rxFreq: item.rxFreq ?? '',
+      location: item.location ?? '', equipment: item.equipment ?? '',
+      serialNumber: item.serialNumber ?? '', source: item.source ?? '',
+      issued: item.issued ?? '', collectedBy: item.collectedBy ?? ''
+    };
+    this.showDetailForm = true;
+  }
+
+  openAddForm(): void {
+    this.selectedItem = null;
+    this.isEditMode = false;
+    this.formErrorMessage = '';
+    this.formData = {
+      callSign: '', licensee: '', txFreq: '', rxFreq: '',
+      location: '', equipment: '', serialNumber: '',
+      source: '', issued: '', collectedBy: ''
+    };
+    this.showDetailForm = true;
+  }
+
+  cancelForm(): void { this.showDetailForm = false; this.formErrorMessage = ''; }
+
+  saveForm(): void {
+    if (!this.formData.licensee?.trim()) {
+      this.formErrorMessage = 'Licensee is required.';
+      return;
+    }
+    this.isSavingForm = true;
+    setTimeout(() => {
+      if (this.isEditMode && this.selectedItem) {
+        Object.assign(this.selectedItem, this.formData);
+      } else {
+        const newId = this.allData.length > 0
+          ? Math.max(...this.allData.map(d => Number(d.id) || 0)) + 1 : 1;
+        const newRecord: any = { id: newId, ...this.formData };
+        this.allData = [...this.allData, newRecord];
+        this.allDataByTab[this.activeTab] = this.allData;
+        this.applyFilterAndSort();
+      }
+      this.isSavingForm = false;
+      this.showDetailForm = false;
+    }, 300);
+  }
+
+  deleteFromForm(): void {
+    if (!this.selectedItem) return;
+    if (confirm(`Delete frequency record "${this.selectedItem.callSign}"? This cannot be undone.`)) {
+      this.allData = this.allData.filter(d => d !== this.selectedItem);
+      this.allDataByTab[this.activeTab] = this.allDataByTab[this.activeTab]
+        .filter(item => item !== this.selectedItem);
+      this.applyFilterAndSort();
+      this.showDetailForm = false;
+      alert('Record deleted successfully.');
+    }
+  }
+}

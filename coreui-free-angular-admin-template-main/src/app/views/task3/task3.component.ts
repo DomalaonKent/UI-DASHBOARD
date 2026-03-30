@@ -100,6 +100,9 @@ export class Task3Component implements OnInit, AfterViewInit, OnDestroy {
   goToVl2(): void           { this.router.navigate(['/visitor-logbook2']); }
   goToDtr(): void           { this.router.navigate(['/daily-time-record']); }
   goToKpi(): void           { this.router.navigate(['/kpi-inspection']); }
+  goToFreqGov(): void       { this.router.navigate(['/frequency-gov']); }
+  goToFreqNonGov(): void    { this.router.navigate(['/frequency-non-gov']); }
+  
 
   switchView(view: string): void {
     this.currentView = view;
