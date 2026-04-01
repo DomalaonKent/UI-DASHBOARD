@@ -1,8 +1,9 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { NgIf, NgTemplateOutlet } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
   AvatarComponent,
+  ColorModeService,
   ContainerComponent,
   DropdownComponent,
   DropdownDividerDirective,
@@ -46,9 +47,18 @@ export class DefaultHeaderComponent implements OnInit {
   @Input() sidebarId: string = 'sidebar1';
 
   private authService = inject(AuthService);
+  private colorModeService = inject(ColorModeService);
+  private router = inject(Router);
   userRole: string = '';
 
   ngOnInit(): void {
     this.userRole = this.authService.getUserRole();
+    const savedTheme = localStorage.getItem('coreui-theme') || 'dark';
+    this.colorModeService.colorMode.set(savedTheme);
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login1']);
   }
 }

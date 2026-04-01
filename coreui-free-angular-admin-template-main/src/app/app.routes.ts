@@ -101,6 +101,12 @@ export const routes: Routes = [
         data: { title: 'Employee Profile' }
       },
       {
+        path: 'settings',
+        loadComponent: () =>
+          import('./views/settings/settings.component').then(m => m.SettingsPageComponent),
+        data: { title: 'Settings' }
+      },
+      {
         path: 'theme',
         loadChildren: () => import('./views/theme/routes').then((m) => m.routes)
       },

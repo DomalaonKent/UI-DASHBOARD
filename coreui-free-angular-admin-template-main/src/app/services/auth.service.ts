@@ -13,4 +13,9 @@ export class AuthService {
   setUserRole(role: string): void {
     this.userRole = role;
   }
+
+  logout(): void {
+    this.userRole = '';
+    localStorage.clear();
+  }
 }

@@ -29,12 +29,14 @@ export const navItems: INavData[] = [
               {
                 name: "Gov't",
                 url: '/call-sign',
-                icon: 'nav-icon-bullet'
+                icon: 'nav-icon-bullet',
+                attributes: { class: 'nav-sub-item' }  
               },
               {
                 name: "Non Gov't",
                 url: '/non-gov-call-sign',
-                icon: 'nav-icon-bullet'
+                icon: 'nav-icon-bullet',
+                attributes: { class: 'nav-sub-item' }  
               }
             ]
           },
@@ -46,12 +48,14 @@ export const navItems: INavData[] = [
               {
                 name: "Gov't",
                 url: '/frequency-gov',
-                icon: 'nav-icon-bullet'
+                icon: 'nav-icon-bullet',
+                attributes: { class: 'nav-sub-item' }  
               },
               {
                 name: "Non Gov't",
                 url: '/frequency-non-gov',
-                icon: 'nav-icon-bullet'
+                icon: 'nav-icon-bullet',
+                attributes: { class: 'nav-sub-item' } 
               }
             ]
           }
@@ -63,8 +67,8 @@ export const navItems: INavData[] = [
         icon: 'nav-icon-bullet',
         children: [
           {
-            name: 'Validation',
-            url: '/connectivity-dashboard',  
+            name: 'Validation',          
+            url: '/connectivity-dashboard',
             icon: 'nav-icon-bullet'
           }
         ]

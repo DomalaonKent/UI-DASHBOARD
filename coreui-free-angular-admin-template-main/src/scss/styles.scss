@@ -1,15 +1,12 @@
-// @use rules MUST be at the top before any other rules
 @use '@angular/material' as mat;
 @use "@coreui/coreui/scss/coreui" as * with (
   $enable-deprecation-messages: false
 );
 @use "@coreui/chartjs/scss/coreui-chartjs";
 @use "theme";
-// @use "fixes";
 @use "custom";
 @use "examples";
 
-// Angular Material theme
 html {
   height: 100%;
   @include mat.theme((
@@ -23,12 +20,9 @@ html {
 }
 
 body {
-  color-scheme: light;
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
   margin: 0;
   height: 100%;
+  font-size: 16px;
 }
 
 .icon-ord,
@@ -36,8 +30,8 @@ body {
 .icon-eod,
 .icon-fad {
   display: inline-block !important;
-  width: 28px !important;
-  height: 28px !important;
+  width: 30px !important;
+  height: 30px !important;
   background-size: contain !important;
   background-repeat: no-repeat !important;
   background-position: center !important;
@@ -84,31 +78,83 @@ body {
 
   &::-webkit-scrollbar        { width: 4px; }
   &::-webkit-scrollbar-track  { background: transparent; }
-  &::-webkit-scrollbar-thumb  { background: rgba(56, 189, 248, 0.3); border-radius: 2px; }
+  &::-webkit-scrollbar-thumb  {
+    background: rgba(56, 189, 248, 0.3);
+    border-radius: 2px;
+  }
+}
+
+.sidebar .nav-group-items {
+  overflow: visible !important;
+}
+
+.sidebar .nav-icon {
+  width: 30px !important;
+  height: 30px !important;
+  font-size: 22px !important;
+  color: #38bdf8 !important;
+  flex-shrink: 0 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .sidebar .nav-link,
 .sidebar .nav-group-toggle {
-  background-color: #111827 !important;
-  border: 1px solid rgba(56, 189, 248, 0.15) !important;
-  border-radius: 8px !important;
-  margin: 4px 8px !important;
-  padding: 12px 16px !important;
-  font-size: 15px !important;
-  color: #e2e8f0 !important;
   display: flex !important;
   align-items: center !important;
-  min-height: 48px !important;
+  background-color: #0a0f1e !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(56, 189, 248, 0.15) !important;
+  border-radius: 8px !important;
 
-  .icon-ord,
-  .icon-legal,
-  .icon-eod,
-  .icon-fad,
-  .nav-icon {
+  .icon-ord, .icon-legal, .icon-eod, .icon-fad, .nav-icon {
     opacity: 1 !important;
     visibility: visible !important;
     filter: none !important;
   }
+
+  &:hover {
+    background-color: rgba(56, 189, 248, 0.10) !important;
+    border-color: #38bdf8 !important;
+    color: #38bdf8 !important;
+  }
+}
+
+.sidebar-nav > .nav-item > .nav-link,
+.sidebar-nav > .nav-group > .nav-group-toggle {
+  margin: 4px 8px !important;
+  padding: 13px 16px !important;
+  font-size: 17px !important;
+  font-weight: 600 !important;
+  min-height: 52px !important;
+  border: 1px solid rgba(56, 189, 248, 0.15) !important;
+  border-radius: 8px !important;
+}
+
+.sidebar-nav > .nav-group > .nav-group-items > .nav-item > .nav-link,
+.sidebar-nav > .nav-group > .nav-group-items > .nav-group > .nav-group-toggle {
+  margin: 3px 6px 3px 22px !important;
+  padding: 11px 14px !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  min-height: 46px !important;
+  border: 1px solid rgba(56, 189, 248, 0.10) !important;
+  border-radius: 7px !important;
+}
+
+.sidebar-nav > .nav-group > .nav-group-items
+  > .nav-group > .nav-group-items
+  > .nav-item > .nav-link,
+.sidebar-nav > .nav-group > .nav-group-items
+  > .nav-group > .nav-group-items
+  > .nav-group > .nav-group-toggle {
+  margin: 3px 6px 3px 38px !important;
+  padding: 10px 12px !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  min-height: 42px !important;
+  border: 1px solid rgba(56, 189, 248, 0.08) !important;
+  border-radius: 6px !important;
 
   &:hover {
     background-color: rgba(56, 189, 248, 0.08) !important;
@@ -117,36 +163,40 @@ body {
   }
 }
 
-.sidebar .nav-group-items {
-  overflow: visible !important;
-  .nav-link {
-    background-color: #0f172a !important;
-    border: 1px solid rgba(56, 189, 248, 0.08) !important;
-    border-radius: 8px !important;
-    color: #94a3b8 !important;
-    margin: 4px 8px 4px 24px !important;
-    padding-left: 2rem !important;
-    min-height: 44px !important;
+.sidebar-nav > .nav-group > .nav-group-items
+  > .nav-group > .nav-group-items
+  > .nav-group > .nav-group-items
+  > .nav-item > .nav-link {
+  margin: 2px 6px 2px 54px !important;
+  padding: 9px 12px !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  min-height: 38px !important;
+  border: 1px solid rgba(56, 189, 248, 0.06) !important;
+  border-radius: 5px !important;
 
-    &:hover {
-      background-color: rgba(56, 189, 248, 0.08) !important;
-      border-color: #38bdf8 !important;
-      color: #38bdf8 !important;
-    }
-  }
-
-  .nav-group-items .nav-link {
-    margin-left: 24px !important;
-    padding-left: 2rem !important;
+  &:hover {
+    background-color: rgba(56, 189, 248, 0.08) !important;
+    border-color: #38bdf8 !important;
+    color: #38bdf8 !important;
   }
 }
 
-.sidebar .nav-icon {
-  width: 28px !important;
-  height: 28px !important;
-  font-size: 22px !important;
-  color: #38bdf8 !important;
-  flex-shrink: 0 !important;
-  opacity: 1 !important;
-  visibility: visible !important;
+.nav-sub-item > .nav-link,
+a.nav-link.nav-sub-item {
+  margin: 2px 6px 2px 54px !important;
+  padding: 9px 12px !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: #ffffff !important;
+  min-height: 38px !important;
+  border: 1px solid rgba(56, 189, 248, 0.06) !important;
+  border-radius: 5px !important;
+  background-color: #0a0f1e !important;
+
+  &:hover {
+    background-color: rgba(56, 189, 248, 0.08) !important;
+    border-color: #38bdf8 !important;
+    color: #38bdf8 !important;
+  }
 }

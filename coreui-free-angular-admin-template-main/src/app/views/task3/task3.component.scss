@@ -1,26 +1,30 @@
 .page-container {
   display: flex;
   gap: 0;
+  background-color: #0a0f1e;
+  min-height: 100%;
 }
 
 .simple-nav-panel {
   width: 250px;
-  background: white;
+  background: #0a0f1e;
   padding: 20px;
-  border-right: 1px solid #ddd;
+  border-right: 1px solid rgba(56, 189, 248, 0.1);
 }
 
 .back-btn {
   width: 100%;
   padding: 10px;
-  background: white;
-  color: #5856d6;
-  border: 2px solid #5856d6;
+  background: #0a0f1e;
+  color: #38bdf8;
+  border: 2px solid #38bdf8;
   border-radius: 6px;
   cursor: pointer;
   margin-bottom: 20px;
 
-  &:hover { background: #f0f0ff; }
+  &:hover {
+    background: rgba(56, 189, 248, 0.08);
+  }
 }
 
 .nav-title {
@@ -41,7 +45,7 @@
 
 .nav-link {
   padding: 12px 15px;
-  color: #5856d6;
+  color: #38bdf8;
   cursor: pointer;
   border-radius: 4px;
   transition: all 0.3s ease;
@@ -51,7 +55,7 @@
   gap: 10px;
 
   &:hover {
-    background: #f0f0ff;
+    background: rgba(56, 189, 248, 0.08);
     padding-left: 20px;
   }
 
@@ -73,7 +77,7 @@
 .nav-link.nav-section-label {
   font-weight: 700;
   font-size: 13px;
-  color: #1a1a4e;
+  color: #94a3b8;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   cursor: default;
@@ -83,9 +87,11 @@
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
-    color: #5856d6;
+    color: #38bdf8;
 
-    &:hover { background: #f0f0ff; }
+    &:hover {
+      background: rgba(56, 189, 248, 0.08);
+    }
   }
 }
 
@@ -97,7 +103,7 @@
 
 .arrow {
   font-size: 13px;
-  color: #5856d6;
+  color: #38bdf8;
 }
 
 .nav-icon-wrap {
@@ -115,10 +121,10 @@
     object-fit: contain;
   }
 
-  &.ord   { background: #fff3cd; }
-  &.legal { background: #e8e8f5; }
-  &.eod   { background: #fde8e8; }
-  &.fad   { background: #e8f5e9; }
+  &.ord   { background: rgba(249, 177, 21, 0.15); }
+  &.legal { background: rgba(88, 86, 214, 0.15); }
+  &.eod   { background: rgba(229, 83, 83, 0.15); }
+  &.fad   { background: rgba(46, 184, 92, 0.15); }
 }
 
 .nav-sub-links {
@@ -127,22 +133,22 @@
   gap: 2px;
   padding-left: 8px;
   margin-left: 14px;
-  border-left: 2px solid #dde0ff;
+  border-left: 2px solid rgba(56, 189, 248, 0.2);
   margin-bottom: 4px;
 }
 
 .nav-link.sub {
   font-size: 13px;
   padding: 8px 12px;
-  color: #555;
+  color: #94a3b8;
   font-weight: 400;
   cursor: default;
   text-transform: none;
   letter-spacing: 0;
 
   &:hover {
-    background: #f0f0ff;
-    color: #5856d6;
+    background: rgba(56, 189, 248, 0.08);
+    color: #38bdf8;
     padding-left: 16px;
     cursor: pointer;
   }
@@ -151,7 +157,8 @@
 .main-area {
   flex: 1;
   padding: 20px;
-  background: #f8f9fa;
+  background: #0a0f1e;
+  color: #e2e8f0;
 }
 
 .welcome-banner {
@@ -160,7 +167,7 @@
   padding: 30px 40px;
   border-radius: 12px;
   margin-bottom: 30px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 
   h1 {
     font-size: 32px;
@@ -197,6 +204,9 @@
 c-card {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   border-radius: 0.375rem;
+  background-color: #0a0f1e !important;
+  border: 1px solid rgba(56, 189, 248, 0.12) !important;
+  color: #e2e8f0 !important;
 }
 
 .settings-placeholder {
@@ -211,62 +221,128 @@ c-card {
   gap: 10px;
   flex-wrap: wrap;
 }
-.btn-connectivity {
-  padding: 8px 10px;
-  background: white;
-  color: #5856d6;
-  border: 1px solid #5856d6;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.2s, color 0.2s;
 
-  &:hover { background: #5856d6; color: white; }
-}
-
-.btn-call-sign {
-  padding: 8px 10px;
-  background: white;
-  color: #5856d6;
-  border: 1px solid #5856d6;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-
-  &:hover { background: #5856d6; color: white; }
-}
-
-.btn-nongov-call-sign {
-  padding: 8px 10px;
-  background: white;
-  color: #5856d6;
-  border: 1px solid #5856d6;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-
-  &:hover { background: #5856d6; color: white; }
-}
-
+.btn-connectivity,
+.btn-call-sign,
+.btn-nongov-call-sign,
 .btn-kpi {
   padding: 8px 10px;
-  background: white;
-  color: #5856d6;
-  border: 1px solid #5856d6;
+  background: #0a0f1e;
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.4);
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
 
-  &:hover { background: #5856d6; color: white; }
+  &:hover {
+    background: rgba(56, 189, 248, 0.12);
+    border-color: #38bdf8;
+    color: #38bdf8;
+  }
+}
+
+label,
+small,
+.form-label {
+  color: #e2e8f0 !important;
+}
+
+table,
+th, td {
+  color: #e2e8f0 !important;
+  border-color: rgba(56, 189, 248, 0.1) !important;
+}
+
+h2, p {
+  color: #e2e8f0;
+}
+
+:host-context(html[data-coreui-theme="light"]),
+:host-context(body.light-theme) {
+
+  .page-container {
+    background-color: #f0f4f8;
+  }
+
+  .simple-nav-panel {
+    background: #ffffff;
+    border-right: 1px solid #e2e8f0;
+  }
+
+  .main-area {
+    background: #f0f4f8;
+    color: #1a1a2e;
+  }
+
+  .back-btn {
+    background: #ffffff;
+    color: #5856d6;
+    border-color: #5856d6;
+
+    &:hover { background: #f0f0ff; }
+  }
+
+  .nav-link {
+    color: #5856d6;
+
+    &:hover { background: #f0f0ff; }
+    &.active { background: #5856d6; color: white; }
+  }
+
+  .nav-link.nav-section-label {
+    color: #1a1a2e;
+    &.collapsible { color: #5856d6; &:hover { background: #f0f0ff; } }
+  }
+
+  .arrow { color: #5856d6; }
+
+  .nav-sub-links { border-left-color: #dde0ff; }
+
+  .nav-link.sub {
+    color: #555;
+    &:hover { background: #f0f0ff; color: #5856d6; }
+  }
+
+  .nav-icon-wrap {
+    &.ord   { background: #fff3cd; }
+    &.legal { background: #e8e8f5; }
+    &.eod   { background: #fde8e8; }
+    &.fad   { background: #e8f5e9; }
+  }
+
+  .btn-connectivity,
+  .btn-call-sign,
+  .btn-nongov-call-sign,
+  .btn-kpi {
+    background: #ffffff;
+    color: #5856d6;
+    border-color: #5856d6;
+
+    &:hover { background: #5856d6; color: white; }
+  }
+
+  c-card {
+    background-color: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #1a1a2e !important;
+  }
+
+  label, small, .form-label { color: #1a1a2e !important; }
+
+  table, th, td {
+    color: #1a1a2e !important;
+    border-color: #e2e8f0 !important;
+  }
+
+  h2, p { color: #1a1a2e; }
+
+  .form-select,
+  select {
+    background-color: #ffffff !important;
+    color: #1a1a2e !important;
+    border-color: #e2e8f0 !important;
+  }
 }
