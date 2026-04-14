@@ -1,9 +1,11 @@
 :host {
   display: block;
-  background: #0a0f1e;
-  margin: -24px;
-  padding: 24px;
-  min-height: 100vh;
+  background: #0A0F1E;  /* or whatever background color they use */
+  margin: -1.5rem;
+  padding: 1.5rem;
+  min-height: calc(100vh - 4rem);
+  width: calc(100% + 3rem);
+  box-sizing: border-box;
 }
 
 .prs-callsign-dashboard {

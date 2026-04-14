@@ -378,4 +378,30 @@ body.light-theme {
   .text-body-secondary {
     color: #64748b !important;
   }
+
+  /* Sidebar always stays dark blue — never follow light theme */
+  .sidebar,
+  c-sidebar,
+  [class*="sidebar"] {
+    --cui-sidebar-bg: #0a0f1e !important;
+    --cui-sidebar-color: #ffffff !important;
+    --cui-sidebar-brand-bg: #0a0f1e !important;
+    --cui-sidebar-nav-link-color: #ffffff !important;
+    --cui-sidebar-nav-group-bg: #0a0f1e !important;
+    background: #0a0f1e !important;
+    background-color: #0a0f1e !important;
+  }
+
+  .sidebar-brand,
+  .sidebar-header,
+  .sidebar-toggler,
+  .sidebar-footer,
+  .sidebar-nav,
+  .sidebar .nav-link,
+  .sidebar .nav-group-toggle,
+  .sidebar .nav-group-items {
+    background: #0a0f1e !important;
+    background-color: #0a0f1e !important;
+    color: #ffffff !important;
+  }
 }

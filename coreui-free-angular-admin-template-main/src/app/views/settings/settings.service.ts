@@ -18,6 +18,10 @@ export interface AppSettings {
 
 const STORAGE_KEY = 'app-settings';
 
+// Must match the key set in app.component.ts:
+// this.#colorModeService.localStorageItemName.set('coreui-free-angular-admin-template-theme-default')
+const COREUI_THEME_KEY = 'coreui-free-angular-admin-template-theme-default';
+
 const DEFAULTS: AppSettings = {
   isLightMode: false,
   display: [
@@ -63,10 +67,16 @@ export class SettingsPageService {
   applyTheme(isLight: boolean): void {
     const theme = isLight ? 'light' : 'dark';
 
+    // Use the SAME key that app.component.ts registered with ColorModeService
     this.colorModeService.colorMode.set(theme);
-    localStorage.setItem('coreui-theme', theme);
+    localStorage.setItem(COREUI_THEME_KEY, theme);
 
+    const html = document.documentElement;
     const body = document.body;
+
+    // Set the data attribute CoreUI listens to
+    html.setAttribute('data-coreui-theme', theme);
+
     if (isLight) {
       body.classList.add('light-theme');
       body.classList.remove('dark-theme');
